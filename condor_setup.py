@@ -8,10 +8,17 @@ import gridpack_lists as sampleLists
 from color_style import style
 
 """Fields changed by user"""
-StringToChange = 'NonResonantModel_Radion'
+StringToChange = 'NonResonantModel_Radion_test2'
 condor_file_name = StringToChange
 storeAreaPath = '/store/user/rasharma/double-higgs/SignalSample/'
 storeAreaPathWithEOSString = '/eos/uscms/store/user/rasharma/double-higgs/SignalSample/'
+
+"""Check if we are working on sl6 machine"""
+SystemOSCheck = 'cat /etc/redhat-release'
+sysReleaseCheck = os.popen(SystemOSCheck).read()
+if sysReleaseCheck.find('release 6') == -1:
+  print(style.RED+'\n\nERROR: You are not on the SL6 machine. Please swich on sl6 machine then run this script.\n\n'+style.RESET)
+  exit()
 
 """Create log files"""
 import infoCreaterGit

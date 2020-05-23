@@ -1,6 +1,6 @@
 *.stdout
+*.lhe
 *.jdl
-*.sh
 *.root
 *.log
 docker_stderror
