@@ -8,7 +8,7 @@ import gridpack_lists as sampleLists
 from color_style import style
 
 """Fields changed by user"""
-StringToChange = 'NonResonantModel_Radion_test2'
+StringToChange = 'DoubleHiggs_Resonant'
 condor_file_name = StringToChange
 storeAreaPath = '/store/user/rasharma/double-higgs/SignalSample/'
 storeAreaPathWithEOSString = '/eos/uscms/store/user/rasharma/double-higgs/SignalSample/'
@@ -44,7 +44,9 @@ for key in sampleLists.models:
 
 
 import condorJobHelper
-listOfFilesToTransfer = 'B2G-RunIIFall18wmLHEGS-01725_1_cfg.py, B2G-RunIIAutumn18DRPremix-02890_1_cfg.py, B2G-RunIIAutumn18DRPremix-02890_2_cfg.py, B2G-RunIIAutumn18MiniAOD-02887_1_cfg.py, B2G-RunIIAutumn18NanoAODv6-01916_1_cfg.py'
+# listOfFilesToTransfer = 'HIG-RunIIFall18wmLHEGS-04249_1_cfg.py, HIG-RunIIAutumn18DRPremix-03126_1_cfg.py, HIG-RunIIAutumn18DRPremix-03126_2_cfg.py, HIG-RunIIAutumn18MiniAOD-03144_1_cfg.py, B2G-RunIIAutumn18NanoAODv6-01916_1_cfg.py'
+listOfFilesToTransfer = 'HIG-RunIIFall18wmLHEGS-04249_1_cfg.py, HIG-RunIIAutumn18DRPremix-03126_1_cfg.py, HIG-RunIIAutumn18DRPremix-03126_2_cfg.py, HIG-RunIIAutumn18MiniAOD-03144_1_cfg.py'
+
 condorJobHelper = condorJobHelper.condorJobHelper(condor_file_name,
                                                   listOfFilesToTransfer,
                                                   12000,    # request_memory 12000
@@ -64,7 +66,7 @@ for key in sampleLists.models:
         DirName = gridpcaks.split('/')[-1].split('_')
         DirName = DirName[0]+'_'+DirName[1]+'_'+DirName[2]+'_'+DirName[3]
         condorJobHelper.logFileName = DirName
-        condorJobHelper.Arguments = 'B2G-RunIIFall18wmLHEGS-01725_1_cfg.py '+DirName+os.sep+dirTag+ '  '+gridpcaks.replace('/','\/')
+        condorJobHelper.Arguments = 'HIG-RunIIFall18wmLHEGS-04249_1_cfg.py '+DirName+os.sep+dirTag+ '  '+gridpcaks.replace('/','\/')
         jdlFile = condorJobHelper.jdlFileAppendLogInfo()
 
 outScript = open(condor_file_name+".sh","w");
@@ -91,8 +93,8 @@ outScript.write('\n'+'ls')
 outScript.write('\n'+'echo "======"')
 outScript.write('\n'+'')
 outScript.write('\n'+'echo $PWD')
-outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_2_16_patch2`')
-outScript.write('\n'+'cd CMSSW_10_2_16_patch2/src/')
+outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_2_22`')
+outScript.write('\n'+'cd CMSSW_10_2_22/src/')
 outScript.write('\n'+'# set cmssw environment')
 outScript.write('\n'+'eval `scram runtime -sh`')
 outScript.write('\n'+'cd -')
@@ -101,17 +103,17 @@ outScript.write('\n'+'echo "==> List all files..."')
 outScript.write('\n'+'ls ')
 outScript.write('\n'+'echo "+=============================="')
 outScript.write('\n'+'echo "==> Running GEN-SIM step (1001 events will be generated)"')
-outScript.write("\n"+'sed -i "s/args = cms.vstring.*/args = cms.vstring(\\"${5}\\"),/g" B2G-RunIIFall18wmLHEGS-01725_1_cfg.py ')
+outScript.write("\n"+'sed -i "s/args = cms.vstring.*/args = cms.vstring(\\"${5}\\"),/g" HIG-RunIIFall18wmLHEGS-04249_1_cfg.py ')
 outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'cat B2G-RunIIFall18wmLHEGS-01725_1_cfg.py  ')
+outScript.write('\n'+'cat HIG-RunIIFall18wmLHEGS-04249_1_cfg.py  ')
 outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'cmsRun B2G-RunIIFall18wmLHEGS-01725_1_cfg.py  ')
+outScript.write('\n'+'cmsRun HIG-RunIIFall18wmLHEGS-04249_1_cfg.py  ')
 # outScript.write('\n'+'cmsRun ${3} ')
 outScript.write('\n'+'echo "List all root files = "')
 outScript.write('\n'+'ls *.root')
 outScript.write('\n'+'echo "List all files"')
 outScript.write('\n'+'ls ')
-outScript.write('\n'+'cp B2G-RunIIFall18wmLHEGS-01725.root out_inLHE_${1}_${2}.root')
+outScript.write('\n'+'cp HIG-RunIIFall18wmLHEGS-04249.root out_inLHE_${1}_${2}.root')
 outScript.write('\n'+'echo "========================="')
 outScript.write('\n'+'echo "==> List all files..."')
 outScript.write('\n'+'ls *.root ')
@@ -138,12 +140,12 @@ outScript.write('\n'+'echo "==> List all files..."')
 outScript.write('\n'+'echo "pwd : ${PWD}"')
 outScript.write('\n'+'ls ')
 outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'echo "==> cmsRun B2G-RunIIAutumn18DRPremix-02890_1_cfg.py" ')
-outScript.write('\n'+'cmsRun B2G-RunIIAutumn18DRPremix-02890_1_cfg.py  ')
-outScript.write('\n'+'echo "==> cmsRun B2G-RunIIAutumn18DRPremix-02890_2_cfg.py"')
-outScript.write('\n'+'cmsRun B2G-RunIIAutumn18DRPremix-02890_2_cfg.py ')
-outScript.write('\n'+'echo "==> cmsRun B2G-RunIIAutumn18MiniAOD-02887_1_cfg.py"')
-outScript.write('\n'+'cmsRun B2G-RunIIAutumn18MiniAOD-02887_1_cfg.py')
+outScript.write('\n'+'echo "==> cmsRun HIG-RunIIAutumn18DRPremix-03126_1_cfg.py" ')
+outScript.write('\n'+'cmsRun HIG-RunIIAutumn18DRPremix-03126_1_cfg.py  ')
+outScript.write('\n'+'echo "==> cmsRun HIG-RunIIAutumn18DRPremix-03126_2_cfg.py"')
+outScript.write('\n'+'cmsRun HIG-RunIIAutumn18DRPremix-03126_2_cfg.py ')
+outScript.write('\n'+'echo "==> cmsRun HIG-RunIIAutumn18MiniAOD-03144_1_cfg.py"')
+outScript.write('\n'+'cmsRun HIG-RunIIAutumn18MiniAOD-03144_1_cfg.py')
 outScript.write('\n'+'echo "========================="')
 outScript.write('\n'+'echo "==> List all files..."')
 outScript.write('\n'+'echo "pwd : ${PWD}"')
@@ -157,7 +159,7 @@ outScript.write('\n'+'echo "+=============================="')
 outScript.write('\n'+'')
 outScript.write('\n'+'# copy output to eos')
 outScript.write('\n'+'echo "xrdcp output for condor"')
-outScript.write('\n'+'cp B2G-RunIIAutumn18MiniAOD-02887.root out_MiniAOD_${1}_${2}.root')
+outScript.write('\n'+'cp HIG-RunIIAutumn18MiniAOD-03144.root out_MiniAOD_${1}_${2}.root')
 outScript.write('\n'+'echo "========================="')
 outScript.write('\n'+'echo "==> List all files..."')
 outScript.write('\n'+'ls *.root ')
@@ -171,25 +173,25 @@ outScript.write('\n'+'echo "+=============================="')
 outScript.write('\n'+'date')
 outScript.write('\n'+'')
 outScript.write('\n'+'')
-outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'echo "==> Running NanoAOD..."')
-outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_2_18`')
-outScript.write('\n'+'cd CMSSW_10_2_18/src')
-outScript.write('\n'+'echo $PWD')
-outScript.write('\n'+'eval `scram runtime -sh`')
-outScript.write('\n'+'cd -')
-outScript.write('\n'+'cmsRun B2G-RunIIAutumn18NanoAODv6-01916_1_cfg.py')
-outScript.write('\n'+'echo "List all root files = "')
-outScript.write('\n'+'ls *.root')
-outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'# copy output to eos')
-outScript.write('\n'+'echo "xrdcp output for condor"')
-outScript.write('\n'+'echo "xrdcp -f B2G-RunIIAutumn18NanoAODv6-01916.root ${OUTDIR}/out_NanoAOD_${1}_${2}.root"')
-outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'xrdcp -f B2G-RunIIAutumn18NanoAODv6-01916.root ${OUTDIR}/out_NanoAOD_${1}_${2}.root')
-outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'echo "Done."')
-outScript.write('\n'+'date')
+# outScript.write('\n'+'echo "+=============================="')
+# outScript.write('\n'+'echo "==> Running NanoAOD..."')
+# outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_2_18`')
+# outScript.write('\n'+'cd CMSSW_10_2_18/src')
+# outScript.write('\n'+'echo $PWD')
+# outScript.write('\n'+'eval `scram runtime -sh`')
+# outScript.write('\n'+'cd -')
+# outScript.write('\n'+'cmsRun B2G-RunIIAutumn18NanoAODv6-01916_1_cfg.py')
+# outScript.write('\n'+'echo "List all root files = "')
+# outScript.write('\n'+'ls *.root')
+# outScript.write('\n'+'echo "+=============================="')
+# outScript.write('\n'+'# copy output to eos')
+# outScript.write('\n'+'echo "xrdcp output for condor"')
+# outScript.write('\n'+'echo "xrdcp -f B2G-RunIIAutumn18NanoAODv6-01916.root ${OUTDIR}/out_NanoAOD_${1}_${2}.root"')
+# outScript.write('\n'+'echo "+=============================="')
+# outScript.write('\n'+'xrdcp -f B2G-RunIIAutumn18NanoAODv6-01916.root ${OUTDIR}/out_NanoAOD_${1}_${2}.root')
+# outScript.write('\n'+'echo "+=============================="')
+# outScript.write('\n'+'echo "Done."')
+# outScript.write('\n'+'date')
 
 outScript.close();
 
