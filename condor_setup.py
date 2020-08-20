@@ -8,7 +8,8 @@ import gridpack_lists as sampleLists
 from color_style import style
 
 """Fields changed by user"""
-StringToChange = 'DoubleHiggs_Resonant'
+#StringToChange = 'DoubleHiggs_Resonant'
+StringToChange = 'DoubleHiggs_NonResonant'
 condor_file_name = StringToChange
 storeAreaPath = '/store/user/rasharma/double-higgs/SignalSample/'
 storeAreaPathWithEOSString = '/eos/uscms/store/user/rasharma/double-higgs/SignalSample/'
@@ -34,7 +35,7 @@ output_log_path = dirsToCreate.CreateLogDirWithDate()
 dirTag = dirsToCreate.dirName
 """Create directories for different models at EOS"""
 for key in sampleLists.models:
-  if key == 'radion':
+  if key == 'bsm':
     for gridpcaks in sampleLists.models[key]:
         DirName = gridpcaks.split('/')[-1].split('_')
         DirName = DirName[0]+'_'+DirName[1]+'_'+DirName[2]+'_'+DirName[3]
@@ -61,12 +62,12 @@ print '==> jdlfile name: ',jdlFile
 
 for key in sampleLists.models:
   print(key)
-  if key == 'radion':
+  if key == 'bsm':
     for gridpcaks in sampleLists.models[key]:
         DirName = gridpcaks.split('/')[-1].split('_')
         DirName = DirName[0]+'_'+DirName[1]+'_'+DirName[2]+'_'+DirName[3]
         condorJobHelper.logFileName = DirName
-        condorJobHelper.Arguments = 'HIG-RunIIFall18wmLHEGS-04249_1_cfg.py '+DirName+os.sep+dirTag+ '  '+gridpcaks.replace('/','\/')
+        condorJobHelper.Arguments = 'HIG-RunIIFall18wmLHEGS-04249_1_cfg.py '+DirName+os.sep+dirTag+ '  '+gridpcaks.replace('/','\/') + '  ' + DirName
         jdlFile = condorJobHelper.jdlFileAppendLogInfo()
 
 outScript = open(condor_file_name+".sh","w");
@@ -79,11 +80,12 @@ outScript.write('\n'+'source /cvmfs/cms.cern.ch/cmsset_default.sh')
 outScript.write('\n'+'echo "'+'#'*51+'"')
 outScript.write('\n'+'echo "#    List of Input Arguments: "')
 outScript.write('\n'+'echo "'+'#'*51+'"')
-outScript.write('\n'+'echo "Input Arguments: $1"')
-outScript.write('\n'+'echo "Input Arguments: $2"')
-outScript.write('\n'+'echo "Input Arguments: $3"')
-outScript.write('\n'+'echo "Input Arguments: $4"')
-outScript.write('\n'+'echo "Input Arguments: $5"')
+outScript.write('\n'+'echo "Input Arguments (Cluster ID): $1"')
+outScript.write('\n'+'echo "Input Arguments (Proc ID): $2"')
+outScript.write('\n'+'echo "Input Arguments (Config file name): $3"')
+outScript.write('\n'+'echo "Input Arguments (Dir name with date tag): $4"')
+outScript.write('\n'+'echo "Input Arguments (gridpack name with path): $5"')
+outScript.write('\n'+'echo "Input Arguments (Dir name): $6"')
 outScript.write('\n'+'echo "'+'#'*51+'"')
 outScript.write('\n'+'')
 outScript.write('\n'+'OUTDIR=root://cmseos.fnal.gov/'+storeAreaPath+os.sep+StringToChange+'/${4}/')
@@ -160,6 +162,7 @@ outScript.write('\n'+'')
 outScript.write('\n'+'# copy output to eos')
 outScript.write('\n'+'echo "xrdcp output for condor"')
 outScript.write('\n'+'cp HIG-RunIIAutumn18MiniAOD-03144.root out_MiniAOD_${1}_${2}.root')
+outScript.write('\n'+'cp HIG-RunIIAutumn18MiniAOD-03144.root out_MiniAOD_${6}_${1}_${2}.root')
 outScript.write('\n'+'echo "========================="')
 outScript.write('\n'+'echo "==> List all files..."')
 outScript.write('\n'+'ls *.root ')
