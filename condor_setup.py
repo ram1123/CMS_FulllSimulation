@@ -8,8 +8,8 @@ import gridpack_lists as sampleLists
 from color_style import style
 
 """Fields changed by user"""
-#StringToChange = 'DoubleHiggs_Resonant'
-StringToChange = 'DoubleHiggs_NonResonant'
+StringToChange = 'DoubleHiggs_Resonant_ZZ'
+# StringToChange = 'DoubleHiggs_NonResonant_ZZ'
 condor_file_name = StringToChange
 storeAreaPath = '/store/user/rasharma/double-higgs/SignalSample/'
 storeAreaPathWithEOSString = '/eos/uscms/store/user/rasharma/double-higgs/SignalSample/'
@@ -35,7 +35,7 @@ output_log_path = dirsToCreate.CreateLogDirWithDate()
 dirTag = dirsToCreate.dirName
 """Create directories for different models at EOS"""
 for key in sampleLists.models:
-  if key == 'bsm':
+  if key == 'radion':
     for gridpcaks in sampleLists.models[key]:
         DirName = gridpcaks.split('/')[-1].split('_')
         DirName = DirName[0]+'_'+DirName[1]+'_'+DirName[2]+'_'+DirName[3]
@@ -62,7 +62,7 @@ print '==> jdlfile name: ',jdlFile
 
 for key in sampleLists.models:
   print(key)
-  if key == 'bsm':
+  if key == 'radion':
     for gridpcaks in sampleLists.models[key]:
         DirName = gridpcaks.split('/')[-1].split('_')
         DirName = DirName[0]+'_'+DirName[1]+'_'+DirName[2]+'_'+DirName[3]

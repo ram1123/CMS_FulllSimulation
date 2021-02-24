@@ -34,10 +34,10 @@ For the CMSSW full simulation, first choose the campaign which is closest to you
 
 [^intro_files]: First step is known as the GEN-SIM step. Second one is DR1 and DR2 third one will generate MINIAOD and finally the fourth one will create the NanoAOD files.
 
-3. Now run each script one by one. First script will give you one *.py file 2nd one should give you two *.py files and third and fourth one should give you one *.py files each.
+3. Now run each script one by one. First script will give you one *.py file 2nd one should give you two *.py files and third and fourth one should give you one *.py files each. 
 
 3. Now append the random number generator at the end of first *.py file. So, that each time when you generate the GEN-SIM file from the gridpack it will generate independent set of events else it will just generate the same copies each time.
-   
+
    patch to add random number generator:
    
    ```bash
@@ -57,3 +57,9 @@ For the CMSSW full simulation, first choose the campaign which is closest to you
 5. Finally submit the condor job.
 
 
+# For Lxplus
+
+```bash
+voms-proxy-init --voms cms --valid 168:00
+cp /tmp/x509up_u48539 ~/. # where `x509up_u48539` is the proxy file name created by previous command
+export X509_USER_PROXY=/afs/cern.ch/user/r/rasharma/x509up_u48539
