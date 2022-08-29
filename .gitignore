@@ -1,3 +1,4 @@
+CMSSW_*/
 *.stdout
 *.lhe
 *.jdl
