@@ -17,12 +17,13 @@ echo "###################################################"
 OUTDIR=/eos/user/r/rasharma/post_doc_ihep/double-higgs/PvtProduction/Radion/DoubleHiggs_Resonant_WW/${4}/
 
 echo "======="
-ls
+ls -ltrh
 echo "======"
 
 echo $PWD
 export SCRAM_ARCH=slc7_amd64_gcc700
 source /cvmfs/cms.cern.ch/cmsset_default.sh
+echo "First step: wmLHE"
 eval `scramv1 project CMSSW CMSSW_10_6_30_patch1`
 cd CMSSW_10_6_30_patch1/src/
 # set cmssw environment
@@ -30,29 +31,24 @@ eval `scram runtime -sh`
 cd -
 echo "========================="
 echo "==> List all files..."
-ls 
+ls -ltrh
 echo "+=============================="
-echo "==> Running wmLHE step (1001 events will be generated)"
+echo "==> Update the gridpack path:"
 sed -i "s/args = cms.vstring.*/args = cms.vstring(\"${5}\"),/g" HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py 
 echo "+=============================="
 echo "Print lines having gridpack path"
-# cat HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py  
- sed -n 153,160p HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py  
+sed -n 153,160p HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py  
 echo "+=============================="
 cmsRun HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py  
-echo "List all root files = "
-ls *.root
-echo "List all files"
-ls 
 echo "==> List all files..."
-ls *.root 
+ls -ltrh
+echo "List all root files = "
+ls -ltrh *.root
 echo "+=============================="
 date
 echo "+=============================="
 
-echo "Loading CMSSW env DR1, DR2 and MiniAOD"
-
-# as LHE and DR/MINIAOD are in different CMSSW reelase so change CMSSW environment
+echo "Second step: genSIM"
 eval `scramv1 project CMSSW CMSSW_10_6_17_patch1`
 cd CMSSW_10_6_17_patch1/src
 echo "pwd : ${PWD}"
@@ -61,12 +57,19 @@ cd -
 echo "========================="
 echo "==> List all files..."
 echo "pwd : ${PWD}"
-ls 
+ls -ltrh
 echo "+=============================="
 echo "==> cmsRun HIG-RunIISummer20UL17SIM-03436_1_cfg.py" 
 cmsRun HIG-RunIISummer20UL17SIM-03436_1_cfg.py  
+echo "List all root files = "
+ls -ltrh *.root
+echo "+=============================="
+echo "Third step: digi"
 cmsRun HIG-RunIISummer20UL17DIGIPremix-03436_1_cfg.py
-# as LHE and DR/MINIAOD are in different CMSSW reelase so change CMSSW environment
+echo "List all root files = "
+ls -ltrh *.root
+echo "+=============================="
+echo "Fourth step: HLT"
 eval `scramv1 project CMSSW CMSSW_9_4_14_UL_patch1`
 cd CMSSW_9_4_14_UL_patch1/src
 echo "pwd : ${PWD}"
@@ -75,7 +78,10 @@ cd -
 echo "========================="
 echo "==> cmsRun HIG-RunIISummer20UL17HLT-03435_1_cfg.py"
 cmsRun HIG-RunIISummer20UL17HLT-03435_1_cfg.py 
-# as LHE and DR/MINIAOD are in different CMSSW reelase so change CMSSW environment
+echo "List all root files = "
+ls -ltrh *.root
+echo "+=============================="
+echo "Fifth step: RECO"
 eval `scramv1 project CMSSW CMSSW_10_6_17_patch1`
 cd CMSSW_10_6_17_patch1/src
 echo "pwd : ${PWD}"
@@ -87,14 +93,12 @@ cmsRun HIG-RunIISummer20UL17RECO-03435_1_cfg.py
 echo "========================="
 echo "==> List all files..."
 echo "pwd : ${PWD}"
-ls 
+ls -ltrh
 echo "+=============================="
 echo "List all root files = "
-ls *.root
-echo "List all files"
-ls 
+ls -ltrh *.root
 echo "+=============================="
-# as LHE and DR/MINIAOD are in different CMSSW reelase so change CMSSW environment
+echo "Sixth step: MiniAOD"
 eval `scramv1 project CMSSW CMSSW_10_6_20`
 cd CMSSW_10_6_20/src
 echo "pwd : ${PWD}"
@@ -106,14 +110,15 @@ cmsRun HIG-RunIISummer20UL17MiniAODv2-03435_1_cfg.py
 echo "========================="
 echo "==> List all files..."
 echo "pwd : ${PWD}"
-ls 
+ls -ltrh
 echo "+=============================="
 echo "List all root files = "
-ls *.root
-echo "List all files"
-ls 
+ls -ltrh *.root
+# copy output to eos
+echo "xrdcp output for condor"
+cp HIG-RunIISummer20UL17MiniAODv2-03435.root ${OUTDIR}/out_miniAOD_${6}_${1}_${2}.root
 echo "+=============================="
-# as LHE and DR/MINIAOD are in different CMSSW reelase so change CMSSW environment
+echo "Seventh step: nanoAOD"
 eval `scramv1 project CMSSW CMSSW_10_6_26`
 cd CMSSW_10_6_26/src
 echo "pwd : ${PWD}"
@@ -125,25 +130,15 @@ cmsRun  HIG-RunIISummer20UL16NanoAODAPVv9-01726_1_cfg.py
 echo "========================="
 echo "==> List all files..."
 echo "pwd : ${PWD}"
-ls 
+ls -ltrh
 echo "+=============================="
 echo "List all root files = "
-ls *.root
-echo "List all files"
-ls 
+ls -ltrh *.root
 echo "+=============================="
 
 # copy output to eos
 echo "xrdcp output for condor"
-echo "========================="
-echo "==> List all files..."
-ls *.root 
-echo "+=============================="
-echo "xrdcp output for condor"
 cp HIG-RunIISummer20UL16NanoAODAPVv9-01726.root ${OUTDIR}/out_nanoAOD_${6}_${1}_${2}.root
-echo "========================="
-echo "==> List all files..."
-ls *.root 
 echo "+=============================="
 date
 
