@@ -1,0 +1,15 @@
+Executable = DoubleHiggs_Resonant_WW.sh
+Universe = vanilla
+Notification = ERROR
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = DoubleHiggs_Resonant_WW.sh, HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py, HIG-RunIISummer20UL17SIM-03436_1_cfg.py, HIG-RunIISummer20UL17DIGIPremix-03436_1_cfg.py, HIG-RunIISummer20UL17HLT-03435_1_cfg.py, HIG-RunIISummer20UL17RECO-03435_1_cfg.py, HIG-RunIISummer20UL17MiniAODv2-03435_1_cfg.py, HIG-RunIISummer20UL16NanoAODAPVv9-01726_1_cfg.py
+x509userproxy = $ENV(X509_USER_PROXY)
++JobFlavour = "longlunch"
+request_memory = 12000
+request_cpus = 8
+Output = condor_logs/DoubleHiggs_Resonant_WW/220829_235341/Radion_hh_narrow_M1100_$(Cluster)_$(Process).stdout
+Error  = condor_logs/DoubleHiggs_Resonant_WW/220829_235341/Radion_hh_narrow_M1100_$(Cluster)_$(Process).stdout
+Log  = condor_logs/DoubleHiggs_Resonant_WW/220829_235341/Radion_hh_narrow_M1100_$(Cluster)_$(Process).log
+Arguments = $(Cluster) $(Process) HIG-RunIISummer20UL17wmLHEGEN-03846_1_cfg.py  Radion_hh_narrow_M1100/220829_235341  \/cvmfs\/cms.cern.ch\/phys_generator\/gridpacks\/UL\/13TeV\/madgraph\/V5_2.6.5\/GF_Spin_0\/Radion_hh_narrow_M1100\/v1\/Radion_hh_narrow_M1100_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz  Radion_hh_narrow_M1100
+Queue 1
