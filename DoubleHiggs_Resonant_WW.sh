@@ -101,8 +101,8 @@ echo "pwd : ${PWD}"
 eval `scram runtime -sh`
 cd -
 echo "========================="
-echo "==> cmsRunHIG-RunIISummer20UL17MiniAODv2-03435_1_cfg.py"
-cmsRunHIG-RunIISummer20UL17MiniAODv2-03435_1_cfg.py
+echo "==> cmsRun HIG-RunIISummer20UL17MiniAODv2-03435_1_cfg.py"
+cmsRun HIG-RunIISummer20UL17MiniAODv2-03435_1_cfg.py
 echo "========================="
 echo "==> List all files..."
 echo "pwd : ${PWD}"
