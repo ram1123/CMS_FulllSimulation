@@ -54,8 +54,8 @@ condorJobHelper = condorJobHelper.condorJobHelper(condor_file_name,
                                                   output_log_path,
                                                   'test',   # logFileName
                                                   "",   # Arguments
-                                                  "longlunch", # 'espresso',  # 20min 'microcentury',  # 1h, 'longlunch',  # 2h 'workday',  # 8h 'tomorrow',  # 1d 'testmatch',  # 3d 'nextweek'  # 1w
-                                                  1 # Queue
+                                                  "tomorrow", # 'espresso',  # 20min 'microcentury',  # 1h, 'longlunch',  # 2h 'workday',  # 8h 'tomorrow',  # 1d 'testmatch',  # 3d 'nextweek'  # 1w
+                                                  50 # Queue
                                                   )
 jdlFile = condorJobHelper.jdlFileHeaderCreater()
 print '==> jdlfile name: ',jdlFile
@@ -75,6 +75,21 @@ for key in sampleLists.models:
 outScript = open(condor_file_name+".sh","w");
 
 outScript.write('#!/bin/bash')
+
+outScript.write('\n'+'')
+# bash function use to print text in box: Ref: https://unix.stackexchange.com/a/70616/61783
+outScript.write('\n'+'function box_out()')
+outScript.write('\n'+'{')
+outScript.write('\n'+'  local s="$*"')
+outScript.write('\n'+'  tput setaf 3')
+outScript.write('\n'+'  echo " -${s//?/-}-')
+outScript.write('\n'+'| ${s//?/ } |')
+outScript.write('\n'+'| $(tput setaf 4)$s$(tput setaf 3) |')
+outScript.write('\n'+'| ${s//?/ } |')
+outScript.write('\n'+' -${s//?/-}-"')
+outScript.write('\n'+'  tput sgr 0')
+outScript.write('\n'+'}')
+
 outScript.write('\n'+'echo "Starting job on " `date`')
 outScript.write('\n'+'echo "Running on: `uname -a`"')
 outScript.write('\n'+'echo "System software: `cat /etc/redhat-release`"')
@@ -101,7 +116,7 @@ outScript.write('\n'+'export SCRAM_ARCH=slc7_amd64_gcc700')
 outScript.write('\n'+'source /cvmfs/cms.cern.ch/cmsset_default.sh')
 
 # Step -1: wmLHE
-outScript.write('\n'+'echo "First step: wmLHE"')
+outScript.write('\n'+'box_out "First step: wmLHE"')
 outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_6_30_patch1`')
 outScript.write('\n'+'cd CMSSW_10_6_30_patch1/src/')
 outScript.write('\n'+'# set cmssw environment')
@@ -128,7 +143,7 @@ outScript.write('\n'+'echo "+=============================="')
 outScript.write('\n'+'')
 
 # Step -2: GEN-SIM
-outScript.write('\n'+'echo "Second step: genSIM"')
+outScript.write('\n'+'box_out "Second step: genSIM"')
 outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_6_17_patch1`')
 outScript.write('\n'+'cd CMSSW_10_6_17_patch1/src')
 outScript.write('\n'+'echo "pwd : ${PWD}"')
@@ -146,7 +161,7 @@ outScript.write('\n'+'ls -ltrh *.root')
 outScript.write('\n'+'echo "+=============================="')
 
 # Step -3: Digi
-outScript.write('\n'+'echo "Third step: digi"')
+outScript.write('\n'+'box_out "Third step: digi"')
 outScript.write('\n'+'cmsRun HIG-RunIISummer20UL17DIGIPremix-03436_1_cfg.py')
 outScript.write('\n'+'echo "List all root files = "')
 outScript.write('\n'+'ls -ltrh *.root')
@@ -155,7 +170,7 @@ outScript.write('\n'+'echo "+=============================="')
 
 
 # Step -4: HLT
-outScript.write('\n'+'echo "Fourth step: HLT"')
+outScript.write('\n'+'box_out "Fourth step: HLT"')
 outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_9_4_14_UL_patch1`')
 outScript.write('\n'+'cd CMSSW_9_4_14_UL_patch1/src')
 outScript.write('\n'+'echo "pwd : ${PWD}"')
@@ -169,7 +184,7 @@ outScript.write('\n'+'ls -ltrh *.root')
 outScript.write('\n'+'echo "+=============================="')
 
 # Step -5: reco
-outScript.write('\n'+'echo "Fifth step: RECO"')
+outScript.write('\n'+'box_out "Fifth step: RECO"')
 outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_6_17_patch1`')
 outScript.write('\n'+'cd CMSSW_10_6_17_patch1/src')
 outScript.write('\n'+'echo "pwd : ${PWD}"')
@@ -188,7 +203,7 @@ outScript.write('\n'+'ls -ltrh *.root')
 outScript.write('\n'+'echo "+=============================="')
 
 # Step -6 : MiniAOD
-outScript.write('\n'+'echo "Sixth step: MiniAOD"')
+outScript.write('\n'+'box_out "Sixth step: MiniAOD"')
 outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_6_20`')
 outScript.write('\n'+'cd CMSSW_10_6_20/src')
 outScript.write('\n'+'echo "pwd : ${PWD}"')
@@ -209,31 +224,31 @@ outScript.write('\n'+'echo "xrdcp output for condor"')
 outScript.write('\n'+'cp HIG-RunIISummer20UL17MiniAODv2-03435.root ${OUTDIR}/out_miniAOD_${6}_${1}_${2}.root')
 outScript.write('\n'+'echo "+=============================="')
 
-# Step -7 : nanoAOD
-outScript.write('\n'+'echo "Seventh step: nanoAOD"')
-outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_6_26`')
-outScript.write('\n'+'cd CMSSW_10_6_26/src')
-outScript.write('\n'+'echo "pwd : ${PWD}"')
-outScript.write('\n'+'eval `scram runtime -sh`')
-outScript.write('\n'+'cd -')
-outScript.write('\n'+'echo "========================="')
-outScript.write('\n'+'echo "==> cmsRun   HIG-RunIISummer20UL16NanoAODAPVv9-01726_1_cfg.py"')
-outScript.write('\n'+'cmsRun  HIG-RunIISummer20UL16NanoAODAPVv9-01726_1_cfg.py')
-outScript.write('\n'+'echo "========================="')
-outScript.write('\n'+'echo "==> List all files..."')
-outScript.write('\n'+'echo "pwd : ${PWD}"')
-outScript.write('\n'+'ls -ltrh')
-outScript.write('\n'+'echo "+=============================="')
-outScript.write('\n'+'echo "List all root files = "')
-outScript.write('\n'+'ls -ltrh *.root')
-outScript.write('\n'+'echo "+=============================="')
-
-
-outScript.write('\n'+'')
-outScript.write('\n'+'# copy output to eos')
-outScript.write('\n'+'echo "xrdcp output for condor"')
-#########outScript.write('\n'+'cp HIG-RunIISummer20UL17MiniAODv2-03435.root ${OUTDIR}/out_miniAOD_${6}_${1}_${2}.root')
-outScript.write('\n'+'cp HIG-RunIISummer20UL16NanoAODAPVv9-01726.root ${OUTDIR}/out_nanoAOD_${6}_${1}_${2}.root')
+## Step -7 : nanoAOD
+#outScript.write('\n'+'box_out "Seventh step: nanoAOD"')
+#outScript.write('\n'+'eval `scramv1 project CMSSW CMSSW_10_6_26`')
+#outScript.write('\n'+'cd CMSSW_10_6_26/src')
+#outScript.write('\n'+'echo "pwd : ${PWD}"')
+#outScript.write('\n'+'eval `scram runtime -sh`')
+#outScript.write('\n'+'cd -')
+#outScript.write('\n'+'echo "========================="')
+#outScript.write('\n'+'echo "==> cmsRun   HIG-RunIISummer20UL16NanoAODAPVv9-01726_1_cfg.py"')
+#outScript.write('\n'+'cmsRun  HIG-RunIISummer20UL16NanoAODAPVv9-01726_1_cfg.py')
+#outScript.write('\n'+'echo "========================="')
+#outScript.write('\n'+'echo "==> List all files..."')
+#outScript.write('\n'+'echo "pwd : ${PWD}"')
+#outScript.write('\n'+'ls -ltrh')
+#outScript.write('\n'+'echo "+=============================="')
+#outScript.write('\n'+'echo "List all root files = "')
+#outScript.write('\n'+'ls -ltrh *.root')
+#outScript.write('\n'+'echo "+=============================="')
+#
+#
+#outScript.write('\n'+'')
+#outScript.write('\n'+'# copy output to eos')
+#outScript.write('\n'+'echo "xrdcp output for condor"')
+##########outScript.write('\n'+'cp HIG-RunIISummer20UL17MiniAODv2-03435.root ${OUTDIR}/out_miniAOD_${6}_${1}_${2}.root')
+#outScript.write('\n'+'cp HIG-RunIISummer20UL16NanoAODAPVv9-01726.root ${OUTDIR}/out_nanoAOD_${6}_${1}_${2}.root')
 outScript.write('\n'+'echo "+=============================="')
 outScript.write('\n'+'date')
 outScript.write('\n'+'')
