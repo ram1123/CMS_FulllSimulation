@@ -8,7 +8,7 @@ import miniAODFiles_list as sampleLists
 from color_style import style
 
 """Fields changed by user"""
-StringToChange = 'aTGC_nTuples_31Oct'
+StringToChange = 'aTGC_nTuples_31Oct_2016'
 # StringToChange = 'DoubleHiggs_NonResonant_ZZ'
 condor_file_name = StringToChange
 storeAreaPath = '/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples'
@@ -35,11 +35,11 @@ output_log_path = dirsToCreate.CreateLogDirWithDate()
 dirTag = dirsToCreate.dirName
 """Create directories for different models at EOS"""
 for key in sampleLists.MiniAIDFiles:
-  print(key)
+  print "key: ",key
   storeDir = dirsToCreate.createStoreDirWithDate(StringToChange,key)
-  print storeDir
+  print "Output path: ",storeDir
   infoLogFiles.SendGitLogAndPatchToEos(storeDir)
-  #if key == '2018':
+  #if key == '2017':
   #  for gridpcaks in sampleLists.MiniAIDFiles[key]:
   #      print gridpcaks
         #DirName = gridpcaks.split('/')[-1].split('_')
@@ -53,8 +53,8 @@ listOfFilesToTransfer = 'B2G-RunIISummer20UL17NanoAODv2-00477_1_cfg_CONDOR.py '
 
 condorJobHelper = condorJobHelper.condorJobHelper(condor_file_name,
                                                   listOfFilesToTransfer,
-                                                  120000,    # request_memory 12000
-                                                  8,    # request_cpus 8
+                                                  0,    # request_memory 12000
+                                                  0,    # request_cpus 8
                                                   output_log_path,
                                                   'test',   # logFileName
                                                   "",   # Arguments
@@ -64,21 +64,38 @@ condorJobHelper = condorJobHelper.condorJobHelper(condor_file_name,
 jdlFile = condorJobHelper.jdlFileHeaderCreater()
 print '==> jdlfile name: ',jdlFile
 
+count = 0
+Files_exists_list = []
+for filename in os.listdir("/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_nTuples_31Oct/"):
+  f = os.path.join("/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_nTuples_31Oct/", filename)
+  if os.path.isfile(f):
+    # print(f.split('_')[-1].split('.')[0])
+    Files_exists_list.append(str(f.split('_')[-1].split('.')[0]))
+    count += 1
+
+print "total files = ",count
 
 for key in sampleLists.MiniAIDFiles:
   print(key)
-  # count = 1
-  if key == '2018':
+  count_total = 0
+  count_submit = 0
+  if key == '2016': # 2016, 2016apv, 2017, 2018
     for gridpcaks in sampleLists.MiniAIDFiles[key]:
         #DirName = gridpcaks.split('/')[-1].split('_')
         #DirName = DirName[0]+'_'+DirName[1]+'_'+DirName[2]+'_'+DirName[3]
         DirName = (gridpcaks.split('_')[-1]).split('.')[0]
-        #print gridpcaks, DirName
+        count_total = count_total + 1
+        # if DirName in Files_exists_list: continue
+        count_submit += 1
+        # print DirName
         condorJobHelper.logFileName = gridpcaks.replace('.root','')
-        condorJobHelper.Arguments = 'B2G-RunIISummer20UL17NanoAODv2-00477_1_cfg_CONDOR.py  '+gridpcaks.replace('/','\/') + ' ' + str(DirName) 
+        condorJobHelper.Arguments = 'B2G-RunIISummer20UL17NanoAODv2-00477_1_cfg_CONDOR.py  '+gridpcaks.replace('/','\/') + ' ' + str(DirName)
         jdlFile = condorJobHelper.jdlFileAppendLogInfo()
         #if count > 1: break
-        #count = count + 1
+
+
+print "total files (total) = ",count_total
+print "total files (submit) = ",count_submit
 
 
 outScript = open(condor_file_name+".sh","w");
