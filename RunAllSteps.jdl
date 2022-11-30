@@ -1,0 +1,16 @@
+Executable = RunAllSteps.sh
+Universe = vanilla
+Notification = ERROR
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = RunAllSteps.sh, step_1_cfg.py, step_2_cfg.py, step_3_cfg.py, step_4_cfg.py, step_5_cfg.py, step_6_cfg.py, step_7_cfg.py
+x509userproxy = $ENV(X509_USER_PROXY)
+getenv      = True
++JobFlavour = "testmatch"
+request_memory = 12000
+request_cpus = 8
+Output = log_ext1/log_$(Cluster)_$(Process).stdout
+Error  = log_ext1/log_$(Cluster)_$(Process).stdout
+Log  = log_ext1/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)
+Queue 500
