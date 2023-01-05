@@ -34,7 +34,7 @@ condor_submit RunGENSIM_condor.jdl
 
 3. Now run each script one by one. First script will give you one *.py file 2nd one should give you two *.py files and third and fourth one should give you one *.py files each. 
 
-3. Now append the random number generator at the end of first *.py file. So, that each time when you generate the GEN-SIM file from the gridpack it will generate independent set of events else it will just generate the same copies each time.
+3. CMSDriver command does not add the random seed in the configuration file. So, need to append the random number generator at the end of first *.py file. So, that each time when you generate the GEN-SIM file from the gridpack it will generate independent set of events else it will just generate the same copies each time.
 
    patch to add random number generator:
    
