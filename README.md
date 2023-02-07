@@ -1,3 +1,11 @@
+# Quick Instructions
+
+* To get config files from mccm, you can setup like this: [GetCfgFile_GENToNano.sh](GetCfgFile_GENToNano.sh)
+    * If you want to use the configuration files already generated from above script, you can pick them from here: [UL2018_ConfigFiles](UL2018_ConfigFiles)
+* Then, here is the condor submission script:
+    * [RunAllSteps.sh](RunAllSteps.sh)
+    * [RunAllSteps.jdl](RunAllSteps.jdl)
+
 # Condor Job Submission
 
 ```bash
@@ -34,12 +42,12 @@ For the CMSSW full simulation, first choose the campaign which is closest to you
 
 [^intro_files]: First step is known as the GEN-SIM step. Second one is DR1 and DR2 third one will generate MINIAOD and finally the fourth one will create the NanoAOD files.
 
-3. Now run each script one by one. First script will give you one *.py file 2nd one should give you two *.py files and third and fourth one should give you one *.py files each. 
+3. Now run each script one by one. First script will give you one *.py file 2nd one should give you two *.py files and third and fourth one should give you one *.py files each.
 
 3. Now append the random number generator at the end of first *.py file. So, that each time when you generate the GEN-SIM file from the gridpack it will generate independent set of events else it will just generate the same copies each time.
 
    patch to add random number generator:
-   
+
    ```bash
    cat << EOF >> testLHE-GEN.py
    from IOMC.RandomEngine.RandomServiceHelper import RandomNumberServiceHelper
@@ -47,7 +55,7 @@ For the CMSSW full simulation, first choose the campaign which is closest to you
    randSvc.populate()
    EOF
    ```
-   
+
    where, `testLHE-GEN.py` is the name of first configuration file.
    
    **NOTE**: Also in the first *.py you need to see if the initial, final and intermediate states are not same then you might need to edit the pythia fragment part. Generally, this part [B2G-RunIIFall18wmLHEGS-01725_1_cfg.py#L98-L162](https://github.com/ram1123/CMS_FulllSimulation/blob/3fb13d4dffe1b3160b1616a4b2ac569f42b84207/B2G-RunIIFall18wmLHEGS-01725_1_cfg.py#L98-L162)

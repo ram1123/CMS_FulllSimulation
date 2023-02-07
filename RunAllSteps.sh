@@ -14,7 +14,7 @@ step4=CMSSW_10_2_16_UL
 step5=CMSSW_10_6_17_patch1
 step6=CMSSW_10_6_25
 step7=CMSSW_10_6_26
-outDir=/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/Test/UL202018
+outDir=/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/UL202018_12Jan2023
 [ ! -d "${outDir}" ] && mkdir -p "${outDir}"
 
 
@@ -38,16 +38,22 @@ do
     eval `scram runtime -sh`
     scram b
     cd -
-    # cp ${basePath}/step_${i}_cfg.py .
     echo "runnning step_${i}_cfg.py"
     if [ $i -eq 1 ]
     then
         cmsRun step_${i}_cfg.py seedval=${seed}
+        echo "================================================="
+        echo "List the root files"
+        ls *.root
+        echo "================================================="
     else
         echo "runnning step_${i}_cfg.py"
         cmsrelnm1=step$((i-1))
-        # cp ${basePath}/${!cmsrelnm1}/src/*root .
         cmsRun step_${i}_cfg.py
+        echo "================================================="
+        echo "List the root files"
+        ls *.root
+        echo "================================================="
     fi
     cd ${basePath}/
 done
