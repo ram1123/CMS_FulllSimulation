@@ -5,27 +5,8 @@
 * Then, here is the condor submission script:
     * [RunAllSteps.sh](RunAllSteps.sh)
     * [RunAllSteps.jdl](RunAllSteps.jdl)
-
-# Condor Job Submission
-
-```bash
-git clone git@github.com:ram1123/CMS_FulllSimulation.git
-cd CMS_FulllSimulation
-git submodule init
-git submodule update
-```
-
-1. place all the python configuration file inside the directory `CMS_FulllSimulation`.
-2. Update the `RunGENSIM_condor.jdl` and `RunGENSIM_condor.sh` files.
-    1. In file `RunGENSIM_condor.sh` you need to replace the python configuration file name at appropriate places.
-    1. Add the appropriate number of events and jobs. For example:
-        1. If you want 50k events then you can change `Queue 50` in the jdl file and put 1000 in each python configuration files.
-1. submit the condor jobs.
-
-```bash
-voms-proxy-init --voms cms --valid 168:00
-condor_submit RunGENSIM_condor.jdl
-```
+* To hadd nano root files, there is a script [mergeOutput.py](Scripts/mergeOutput.py)
+    * To run: `python Scripts/mergeOutput.py`
 
 # General Information
 
@@ -57,17 +38,38 @@ For the CMSSW full simulation, first choose the campaign which is closest to you
    ```
 
    where, `testLHE-GEN.py` is the name of first configuration file.
-   
+
    **NOTE**: Also in the first *.py you need to see if the initial, final and intermediate states are not same then you might need to edit the pythia fragment part. Generally, this part [B2G-RunIIFall18wmLHEGS-01725_1_cfg.py#L98-L162](https://github.com/ram1123/CMS_FulllSimulation/blob/3fb13d4dffe1b3160b1616a4b2ac569f42b84207/B2G-RunIIFall18wmLHEGS-01725_1_cfg.py#L98-L162)
 
 4. Test each python configuration one after another in appropriate sequence to check if its fine. *There might be an issue of name of input root files. The script might not taking the input of previous step automatically because of naming difference. So you need to fix it.*
 
 5. Finally submit the condor job.
 
-
-# For Lxplus
+# Condor info for Lxplus
 
 ```bash
 voms-proxy-init --voms cms --valid 168:00
 cp /tmp/x509up_u48539 ~/. # where `x509up_u48539` is the proxy file name created by previous command
 export X509_USER_PROXY=/afs/cern.ch/user/r/rasharma/x509up_u48539
+```
+
+# Condor Job Submission [obselete]
+
+```bash
+git clone git@github.com:ram1123/CMS_FulllSimulation.git
+cd CMS_FulllSimulation
+git submodule init
+git submodule update
+```
+
+1. place all the python configuration file inside the directory `CMS_FulllSimulation`.
+2. Update the `RunGENSIM_condor.jdl` and `RunGENSIM_condor.sh` files.
+    1. In file `RunGENSIM_condor.sh` you need to replace the python configuration file name at appropriate places.
+    1. Add the appropriate number of events and jobs. For example:
+        1. If you want 50k events then you can change `Queue 50` in the jdl file and put 1000 in each python configuration files.
+1. submit the condor jobs.
+
+```bash
+voms-proxy-init --voms cms --valid 168:00
+condor_submit RunGENSIM_condor.jdl
+```
