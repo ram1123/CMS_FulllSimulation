@@ -1,7 +1,7 @@
 import os
 from gridpack_lists import models
 
-CondorExecutable = "test"
+CondorExecutable = "aTGC_WW_Signal"
 outputDirName = "/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples/"
 CondorQueue = "testmatch" # espresso, testmatch
 queue = 1000 # Number of jobs
@@ -137,14 +137,14 @@ with open(CondorExecutable + ".jdl","w") as fout:
     for gridpackWithPath in models['aTGC']:
         short_name = gridpackWithPath.split('/')[-1].replace('_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz','')
 
-        output_rootfile_path =  'outputDirName'+'/'+short_name
-        # os.makedirs(output_rootfile_path)
+        output_rootfile_path =  outputDirName+'/'+short_name
+        os.makedirs(output_rootfile_path, exist_ok=True)
 
         output_logfile_path = 'log'+'/' + short_name
-        # os.makedirs(output_logfile_path)
+        os.makedirs(output_logfile_path, exist_ok=True)
         fout.write(jdl_file_template_part2of2.format(
                                             CondorLogPath = output_logfile_path,
-                                            OutPutDir = short_name,
+                                            OutPutDir = output_rootfile_path,
                                             # GridpackWithPath = gridpackWithPath.replace('/','\/'),
                                             GridpackWithPath = gridpackWithPath,
                                             queue = queue
