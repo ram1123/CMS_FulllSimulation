@@ -5,6 +5,9 @@
 * Then, here is the condor submission script:
     * [RunAllSteps.sh](RunAllSteps.sh)
     * [RunAllSteps.jdl](RunAllSteps.jdl)
+    * If you need to submit condor jobs for many gridpack then you can use the python script that creates jdl and sh file for condor submission. The python script: [condor_setup_new.py](condor_setup_new.py)
+        * This uses a dict having list of gridpacks, that you can define like this: [gridpack_lists.py](gridpack_lists.py)
+        * Then just run the script like `python  condor_setup_new.py`.
 * To hadd nano root files, there is a script [mergeOutput.py](Scripts/mergeOutput.py)
     * To run: `python Scripts/mergeOutput.py`
 
