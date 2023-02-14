@@ -1,15 +1,30 @@
+import argparse
 import os
 from gridpack_lists import models
 from condor_script_template import sh_file_template
 from condor_script_template import jdl_file_template_part1of2
 from condor_script_template import jdl_file_template_part2of2
 
-# Define the input parameters for the scripts
-CondorExecutable = "aTGC_WW_Signal_v2"
-output_logfile_root = "log_14Feb"
-outputDirName = "/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples/"
-CondorQueue = "testmatch" # espresso, testmatch
-queue = 1000 # Number of jobs
+parser = argparse.ArgumentParser(description='Generate Condor script for aTGC samples')
+
+parser.add_argument('--condor_executable', type=str, default="aTGC_WW_Signal_v2",
+                    help='Name of the Condor executable')
+parser.add_argument('--output_logfile_path', type=str, default="log_14Feb",
+                    help='Path for the log file')
+parser.add_argument('--output_dir_name', type=str, default="/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples/",
+                    help='Path for the output directory')
+parser.add_argument('--condor_queue', type=str, default="testmatch",
+                    help='Name of the Condor queue: espresso, testmatch')
+parser.add_argument('--queue', type=int, default=1000,
+                    help='Number of jobs')
+
+args = parser.parse_args()
+
+CondorExecutable = args.condor_executable
+output_logfile_path = args.output_logfile_path
+outputDirName = args.output_dir_name
+CondorQueue = args.condor_queue
+queue = args.queue
 
 # Create the shell script
 with open(f"{CondorExecutable}.sh","w") as fout:
