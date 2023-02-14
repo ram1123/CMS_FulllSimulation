@@ -1,15 +1,25 @@
 # Quick Instructions
 
-* To get config files from mccm, you can setup like this: [GetCfgFile_GENToNano.sh](GetCfgFile_GENToNano.sh)
-    * If you want to use the configuration files already generated from above script, you can pick them from here: [UL2018_ConfigFiles](UL2018_ConfigFiles)
-* Then, here is the condor submission script:
-    * [RunAllSteps.sh](RunAllSteps.sh)
-    * [RunAllSteps.jdl](RunAllSteps.jdl)
-    * If you need to submit condor jobs for many gridpack then you can use the python script that creates jdl and sh file for condor submission. The python script: [condor_setup_new.py](condor_setup_new.py)
-        * This uses a dict having list of gridpacks, that you can define like this: [gridpack_lists.py](gridpack_lists.py)
-        * Then just run the script like `python  condor_setup_new.py`.
-* To hadd nano root files, there is a script [mergeOutput.py](Scripts/mergeOutput.py)
-    * To run: `python Scripts/mergeOutput.py`
+## Getting Configuration Files from mccm
+
+* To get the configuration files from mccm, you can use the following script: [GetCfgFile_GENToNano.sh](GetCfgFile_GENToNano.sh)
+* The generated configuration files can be found here: [UL2018_ConfigFiles](UL2018_ConfigFiles)
+
+## Submitting Condor Jobs
+
+* The following scripts are required for submitting condor jobs:
+    1.  [RunAllSteps.sh](RunAllSteps.sh)
+    1. [RunAllSteps.jdl](RunAllSteps.jdl)
+
+* If you need to submit multiple condor jobs for different gridpacks, you can use the following Python script to create jdl and sh files: [condor_setup_new.py](condor_setup_new.py)
+    * This script uses a list of gridpacks defined in the following file: [gridpack_lists.py](gridpack_lists.py)
+    * To run the script, simply type `python condor_setup_new.py` in your terminal.
+
+## Merging Nano Root Files
+
+* The following Python script can be used to hadd nano root files: [mergeOutput.py](Scripts/mergeOutput.py)
+* To run the script, type `python Scripts/mergeOutput.py` in your terminal.
+
 
 # General Information
 
