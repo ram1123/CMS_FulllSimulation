@@ -99,6 +99,8 @@ echo "Ending job on " `date`
 jdl_file_template_part1of2 = '''Executable = {CondorExecutable}.sh
 Universe = vanilla
 Notification = ERROR
+Should_Transfer_Files = YES
+Transfer_Output_Files = ""
 Transfer_Input_Files = {CondorExecutable}.sh, UL2018_ConfigFiles/step_1_cfg.py, UL2018_ConfigFiles/step_2_cfg.py, UL2018_ConfigFiles/step_3_cfg.py, UL2018_ConfigFiles/step_4_cfg.py, UL2018_ConfigFiles/step_5_cfg.py, UL2018_ConfigFiles/step_6_cfg.py, UL2018_ConfigFiles/step_7_cfg.py
 x509userproxy = $ENV(X509_USER_PROXY)
 getenv      = True
