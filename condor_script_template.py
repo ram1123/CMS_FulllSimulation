@@ -25,7 +25,7 @@ step4=CMSSW_10_2_16_UL
 step5=CMSSW_10_6_17_patch1
 step6=CMSSW_10_6_25
 step7=CMSSW_10_6_26
-outDir={{3}}
+outDir=${{3}}
 [ ! -d "${{outDir}}" ] && mkdir -p "${{outDir}}"
 
 arch=slc7_amd64_gcc700
@@ -90,6 +90,7 @@ do
 done
 
 
+echo "cp EXO-RunIISummer20UL18NanoAODv9-01225.root ${{outDir}}/EXO-RunIISummer20UL18NanoAODv9_${{seed}}.root"
 cp EXO-RunIISummer20UL18NanoAODv9-01225.root ${{outDir}}/EXO-RunIISummer20UL18NanoAODv9_${{seed}}.root
 
 echo "Ending job on " `date`

@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description='Generate Condor script for aTGC sa
 
 parser.add_argument('--condor_executable', type=str, default="aTGC_WW_Signal_v2",
                     help='Name of the Condor executable')
-parser.add_argument('--output_logfile_path', type=str, default="log_15Feb",
+parser.add_argument('--TopLogDirectory', type=str, default="log_15Feb_cpBugFix",
                     help='Path for the log file')
 parser.add_argument('--output_dir_name', type=str, default="/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples/",
                     help='Path for the output directory')
@@ -21,7 +21,7 @@ parser.add_argument('--queue', type=int, default=1000,
 args = parser.parse_args()
 
 CondorExecutable = args.condor_executable
-output_logfile_path = args.output_logfile_path
+TopLogDirectory = args.TopLogDirectory
 outputDirName = args.output_dir_name
 CondorQueue = args.condor_queue
 queue = args.queue
@@ -45,7 +45,7 @@ with open(f"{CondorExecutable}.jdl","w") as fout:
         os.makedirs(output_rootfile_path, exist_ok=True)
 
         # Create the output log file path
-        output_logfile_path = f"{output_logfile_path}/{short_name}"
+        output_logfile_path = f"{TopLogDirectory}/{short_name}"
         os.makedirs(output_logfile_path, exist_ok=True)
 
         # Write the job description to the file
