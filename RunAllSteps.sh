@@ -1,6 +1,17 @@
 #!/bin/bash
+
+echo "Job started..."
 echo "Starting job on " `date`
 echo "Running on: `uname -a`"
+echo "System software: `cat /etc/redhat-release`"
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+echo "###################################################"
+echo "#    List of Input Arguments: "
+echo "###################################################"
+echo "Input Arguments (Cluster ID): $1"
+echo "Input Arguments (Proc ID): $2"
+echo "Input Arguments (Output Dir): $3"
+echo "Input Arguments (Gridpack with path): $4"
 
 echo "i am here ${PWD}"
 
@@ -14,19 +25,25 @@ step4=CMSSW_10_2_16_UL
 step5=CMSSW_10_6_17_patch1
 step6=CMSSW_10_6_25
 step7=CMSSW_10_6_26
-# outDir=/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/temp
-outDir=/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800
+outDir=${3}
 [ ! -d "${outDir}" ] && mkdir -p "${outDir}"
 
-
 arch=slc7_amd64_gcc700
+
+
+sed -i "s|args = cms.vstring.*|args = cms.vstring('$4'),|g" step_1_cfg.py
+echo "+=============================="
+echo "Print lines having gridpack path"
+sed -n 176,183p step_1_cfg.py  # Print line number 153 to 160; it is expected that gridpack path and nEvents patch exists between 153 and 160
+echo "+=============================="
+
 
 
 for i in {1..7}
 do
     cmssw=step$i
     export SCRAM_ARCH=slc7_amd64_gcc700
-    echo "i am here ${PWD}"
+    echo "==> PWD:  ${PWD}"
     echo $i,${arch},${!cmssw}
     source /cvmfs/cms.cern.ch/cmsset_default.sh
     if [ -r ${!cmssw}/src ] ; then
@@ -41,14 +58,13 @@ do
         git cms-init
         git cms-merge-topic ram1123:aTGC_VV_reweight_CMSSW100626
         wget https://raw.githubusercontent.com/ram1123/cmssw/6295127490fb426e7ccbe39b68195677bfdf60f0/initrwgt_aQGC16.header
-        #scram b
     else
         echo "step - ${i} "
     fi
     echo `pwd`
     echo ${!cmssw}
     echo "================================================="
-    export HOME=$PWD
+    export HOME=${PWD}
     eval `scram runtime -sh`
     scram b
     cd -
@@ -67,12 +83,14 @@ do
         echo "================================================="
         echo "List the root files"
         ls *.root
+        ls -ltrh *.root
         echo "================================================="
     fi
     cd ${basePath}/
 done
 
 
+echo "cp EXO-RunIISummer20UL18NanoAODv9-01225.root ${outDir}/EXO-RunIISummer20UL18NanoAODv9_${seed}.root"
 cp EXO-RunIISummer20UL18NanoAODv9-01225.root ${outDir}/EXO-RunIISummer20UL18NanoAODv9_${seed}.root
 
 echo "Ending job on " `date`
