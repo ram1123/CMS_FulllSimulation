@@ -9,6 +9,7 @@
 
 * The following scripts are required for submitting condor jobs:
     1.  [RunAllSteps.sh](RunAllSteps.sh)
+        1. If you run this locally, then copy the config file from here ([UL2018_ConfigFiles](UL2018_ConfigFiles)) to the same directory where script `RunAllSteps.sh` is present.
     1. [RunAllSteps.jdl](RunAllSteps.jdl)
 
 * If you need to submit multiple condor jobs for different gridpacks, you can use the following Python script to create jdl and sh files: [condor_setup_new.py](condor_setup_new.py)
