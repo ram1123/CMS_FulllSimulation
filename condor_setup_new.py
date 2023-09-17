@@ -7,11 +7,11 @@ from condor_script_template import jdl_file_template_part2of2
 
 parser = argparse.ArgumentParser(description='Generate Condor script for aTGC samples')
 
-parser.add_argument('--condor_executable', type=str, default="aTGC_WW_Signal_v2",
+parser.add_argument('--condor_executable', type=str, default="aTGC_WW_Signal_ext1",
                     help='Name of the Condor executable')
 parser.add_argument('--TopLogDirectory', type=str, default="log_15Feb_cpBugFix",
                     help='Path for the log file')
-parser.add_argument('--output_dir_name', type=str, default="/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples/",
+parser.add_argument('--output_dir_name', type=str, default="/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples_Sep2023_ext/",
                     help='Path for the output directory')
 parser.add_argument('--condor_queue', type=str, default="testmatch",
                     help='Name of the Condor queue: espresso, testmatch')
