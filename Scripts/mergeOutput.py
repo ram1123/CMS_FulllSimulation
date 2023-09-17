@@ -24,36 +24,42 @@ def isValidRootFile(fname):
     isValid = not (f.IsZombie() or f.TestBit(ROOT.TFile.kRecovered) or f.GetListOfKeys().IsEmpty())
     f.Close()
     if not isValid:
-        logging.warning("Zombie found: {}".format(faultyfiles))
+        logging.warning("Zombie found: {}".format(fname))
     return isValid
 
-def checkfaulty(fname):
+def checkfaulty(fname, ref = None):
+    if not ref:
+        ref = ROOT.TFile.Open(fname)
+    # logging.warning("Checking for faulty keys in file {fname}".format(fname=fname))
     faultyfiles = []  # Initialize an empty list to hold the names of faulty files
     probe = ROOT.TFile.Open(fname)
 
-    for e in probe.GetListOfKeys():
+    if not probe:
+        logging.error("Could not open file {fname}".format(fname=fname))
+        return False
+
+    for e in ref.GetListOfKeys():
         name = e.GetName()
         try:
             otherObj = probe.GetListOfKeys().FindObject(name).ReadObj()
-        except Exception as ex:
-            print("Exception occurred: ", ex)
+        except:
             faultyfiles.append(probe.GetName())
 
     probe.Close()
 
     if faultyfiles:
-        logging.warning("Faulty files found: {}".format(faultyfiles))
+        logging.warning("Faulty files found: {faultyfiles}".format(faultyfiles=faultyfiles))
         return False
 
     return True
 
-def isValidAndFaultFree(fname):
+def isValidAndFaultFree(fname,ref = None):
     # First check if it's a valid ROOT file
     if not isValidRootFile(fname):
         return False
 
     # Then check for faulty keys
-    return checkfaulty(fname)
+    return checkfaulty(fname, ref)
 
 def merge_files(targetFile, filesToMerge):
     # If there are more than 100 files, split them into groups of 100
@@ -78,7 +84,7 @@ def merge_files(targetFile, filesToMerge):
 
 
         # Merge temporary files into the final target file
-        system_with_terminal_display('python haddnano.py {targetFile} {" ".join(tempTargets)}'.format(targetFile=targetFile))
+        system_with_terminal_display('python haddnano.py {0} {1}'.format(targetFile, " ".join(tempTargets)))
 
         # Remove temporary files
         for tempTarget in tempTargets:
@@ -105,8 +111,10 @@ def main():
         'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-150to600',
         'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
         'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-600to800',
-        'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf'
+        'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
+        'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-600to800'
     ]
+
     # Loop through each era directory
     for eraDir in glob.glob("{mainOutputDir}/*".format(mainOutputDir=mainOutputDir)):
         if not os.path.isdir(eraDir):
@@ -135,6 +143,10 @@ def main():
                 system_with_terminal_display('rm {targetFile}'.format(targetFile=targetFile))
 
         # Merge the files
+        logging.info("Before zombie: Length of filesToMerge: {0}".format(len(filesToMerge)))
+
+        filesToMerge = [f for f in filesToMerge if isValidAndFaultFree(f, ROOT.TFile.Open(filesToMerge[0]))]
+        logging.info("After zombie: Length of filesToMerge: {0}".format(len(filesToMerge)))
         merge_files(targetFile, filesToMerge)
 
 if __name__ == "__main__":
