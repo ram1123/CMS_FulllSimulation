@@ -1,11 +1,6 @@
 #!/bin/env python
 import os, glob, ROOT, subprocess, sys
 
-# path options:
-# aTGC_nTuples_31Oct_2016
-# aTGC_nTuples_31Oct_2017
-# aTGC_nTuples_31Oct_2018
-# aTGC_nTuples_31Oct_apv2016
 
 # submitVersion = 'aTGC_nTuples_31Oct_2016'
 submitVersion = str(sys.argv[1])
@@ -29,25 +24,39 @@ def isValidRootFile(fname):
         f.Close()
 
 # for eraDir in glob.glob(os.path.join(mainOutputDir, 'UL2016*')):
-for eraDir in glob.glob(mainOutputDir):
+for eraDir in glob.glob(mainOutputDir+'/*'):
+    print ("=="*51)
+    if not os.path.isdir(eraDir): continue
     era = eraDir.split('/')[-1]
-    try:
-        os.makedirs(os.path.join(eraDir, 'merged'))
-    except:
-        pass
+    # try:
+        # os.makedirs(os.path.join(eraDir, 'merged'))
+    # except:
+        # pass
     print("eraDir:",eraDir)
     print("era:",era)
-    print("merged: ",os.path.join(eraDir, 'merged'))
-    outputMergedFile = os.path.join(eraDir, 'merged')
+    Alreadymerged = ['WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-150to600',
+                                'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
+                                'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-600to800',
+                                'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf']
+    # Check if era does not have any elements that belongs to Alreadymerged list
+    if era in Alreadymerged:
+        print("Skipping this era as it is already merged.")
+        continue
+    # Check if eraDir is a directory or not
+    # print("merged: ",os.path.join(eraDir, 'merged'))
+    # outputMergedFile = os.path.join(eraDir, 'merged')
     for crabDir in glob.glob(os.path.join(mainOutputDir)):
-        print ("=="*51)
-        targetFile   = os.path.join(os.path.join(eraDir, 'merged'), crabDir.split( '/')[-1] + '.root')
-        filesToMerge = glob.glob(os.path.join(crabDir, '*.root'))
+        print("crabDir: ",crabDir)
+        targetFile   = os.path.join(eraDir, '.root')
+        targetFile = targetFile.replace('/.root','.root')
+        filesToMerge = glob.glob(os.path.join(eraDir, '*.root'))
         print "crabDir: ",crabDir
         print "targetFile: ",targetFile
         # print "filesToMerge: ",filesToMerge
         print "len(filesToMerge): ",len(filesToMerge)
-
+        if len(filesToMerge) == 0:
+            print("No files to merge. Skipping.")
+            continue
         print "Check if the target file already exits or not?"
         if os.path.exists(targetFile): # if existing target file exists and looks ok, skip
             if isValidRootFile(targetFile):

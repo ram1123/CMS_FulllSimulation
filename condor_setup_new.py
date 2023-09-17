@@ -37,7 +37,7 @@ with open(f"{CondorExecutable}.jdl","w") as fout:
                                             CondorQueue = CondorQueue))
 
     # Loop over all gridpacks  to  add them in the jdl file
-    for gridpackWithPath in models['aTGC']:
+    for gridpackWithPath in models['aTGC_Sep2023']:
         short_name = gridpackWithPath.split('/')[-1].replace('_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz','')
 
         # Create the output path, where the nanoAOD will be stored
