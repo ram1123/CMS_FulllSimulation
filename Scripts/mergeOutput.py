@@ -1,105 +1,141 @@
-#!/bin/env python
-import os, glob, ROOT, subprocess, sys
+#!/usr/bin/env python
+import os
+import glob
+import ROOT
+import subprocess
+import sys
+import logging
 
-
-# submitVersion = 'aTGC_nTuples_31Oct_2016'
-submitVersion = str(sys.argv[1])
-mainOutputDir = '/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/%s' % (submitVersion)
-print("submitVersion: %s"%submitVersion)
-print("mainOutputDir: %s"%mainOutputDir)
+logging.basicConfig(level=logging.INFO)
 
 def system(command):
-    # print "=="*51
-    # print "COMMAND: ",command
     return subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-# Check if valid ROOT file exists
+def system_with_terminal_display(command):
+    logging.debug(command)
+    return subprocess.call(command, shell=True)
+
 def isValidRootFile(fname):
-    if not os.path.exists(os.path.expandvars(fname)): return False
-    f = ROOT.TFile(fname)
-    if not f: return False
-    try:
-        return not (f.IsZombie() or f.TestBit(ROOT.TFile.kRecovered) or f.GetListOfKeys().IsEmpty())
-    finally:
-        f.Close()
+    if not os.path.exists(fname):
+        return False
+    f = ROOT.TFile.Open(fname)
+    if not f:
+        return False
+    isValid = not (f.IsZombie() or f.TestBit(ROOT.TFile.kRecovered) or f.GetListOfKeys().IsEmpty())
+    f.Close()
+    if not isValid:
+        logging.warning("Zombie found: {}".format(faultyfiles))
+    return isValid
 
-# for eraDir in glob.glob(os.path.join(mainOutputDir, 'UL2016*')):
-for eraDir in glob.glob(mainOutputDir+'/*'):
-    print ("=="*51)
-    if not os.path.isdir(eraDir): continue
-    era = eraDir.split('/')[-1]
-    # try:
-        # os.makedirs(os.path.join(eraDir, 'merged'))
-    # except:
-        # pass
-    print("eraDir:",eraDir)
-    print("era:",era)
-    Alreadymerged = ['WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-150to600',
-                                'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
-                                'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-600to800',
-                                'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf']
-    # Check if era does not have any elements that belongs to Alreadymerged list
-    if era in Alreadymerged:
-        print("Skipping this era as it is already merged.")
-        continue
-    # Check if eraDir is a directory or not
-    # print("merged: ",os.path.join(eraDir, 'merged'))
-    # outputMergedFile = os.path.join(eraDir, 'merged')
-    for crabDir in glob.glob(os.path.join(mainOutputDir)):
-        print("crabDir: ",crabDir)
-        targetFile   = os.path.join(eraDir, '.root')
-        targetFile = targetFile.replace('/.root','.root')
-        filesToMerge = glob.glob(os.path.join(eraDir, '*.root'))
-        print "crabDir: ",crabDir
-        print "targetFile: ",targetFile
-        # print "filesToMerge: ",filesToMerge
-        print "len(filesToMerge): ",len(filesToMerge)
-        if len(filesToMerge) == 0:
-            print("No files to merge. Skipping.")
+def checkfaulty(fname):
+    faultyfiles = []  # Initialize an empty list to hold the names of faulty files
+    probe = ROOT.TFile.Open(fname)
+
+    for e in probe.GetListOfKeys():
+        name = e.GetName()
+        try:
+            otherObj = probe.GetListOfKeys().FindObject(name).ReadObj()
+        except Exception as ex:
+            print("Exception occurred: ", ex)
+            faultyfiles.append(probe.GetName())
+
+    probe.Close()
+
+    if faultyfiles:
+        logging.warning("Faulty files found: {}".format(faultyfiles))
+        return False
+
+    return True
+
+def isValidAndFaultFree(fname):
+    # First check if it's a valid ROOT file
+    if not isValidRootFile(fname):
+        return False
+
+    # Then check for faulty keys
+    return checkfaulty(fname)
+
+def merge_files(targetFile, filesToMerge):
+    # If there are more than 100 files, split them into groups of 100
+    if len(filesToMerge) > 100:
+        logging.info('A lot of files to merge; this might take some time...')
+        tempTargets = []
+        tempFilesToMerge = [filesToMerge[x:x+100] for x in range(0, len(filesToMerge), 100)]
+
+        for i, batch in enumerate(tempFilesToMerge):
+            tempTargetFile = targetFile.replace('.root', '-temp{}.root'.format(i))
+            tempTargets.append(tempTargetFile)
+
+            # Check if temporary target file already exists and is valid
+            if os.path.exists(tempTargetFile):
+                if isValidAndFaultFree(tempTargetFile):
+                    continue
+                else:
+                    logging.info("Removing temp hadd file {tempTargetFile}".format(tempTargetFile=tempTargetFile))
+                    system_with_terminal_display('rm {tempTargetFile}'.format(tempTargetFile=tempTargetFile))
+
+            system_with_terminal_display('python haddnano.py {0} {1}'.format(tempTargetFile, ' '.join(batch)))
+
+
+        # Merge temporary files into the final target file
+        system_with_terminal_display('python haddnano.py {targetFile} {" ".join(tempTargets)}'.format(targetFile=targetFile))
+
+        # Remove temporary files
+        for tempTarget in tempTargets:
+            system_with_terminal_display('rm {tempTarget}'.format(tempTarget=tempTarget))
+
+    # If there are 100 or fewer files, directly merge them
+    else:
+        logging.info(system('python haddnano.py {targetFile} {" ".join(filesToMerge)}'.format(targetFile=targetFile)))
+
+
+def main():
+    # Validate arguments
+    if len(sys.argv) < 2:
+        logging.error("Usage: script_name.py <submitVersion>")
+        sys.exit(1)
+
+    submitVersion = str(sys.argv[1])
+    mainOutputDir = '/eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/{submitVersion}'.format(submitVersion=submitVersion)
+    logging.info("submitVersion: {submitVersion}".format(submitVersion=submitVersion))
+    logging.info("mainOutputDir: {mainOutputDir}".format(mainOutputDir=mainOutputDir))
+
+    # List of already merged eras
+    Alreadymerged = [
+        'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-150to600',
+        'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
+        'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-600to800',
+        'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf'
+    ]
+    # Loop through each era directory
+    for eraDir in glob.glob("{mainOutputDir}/*".format(mainOutputDir=mainOutputDir)):
+        if not os.path.isdir(eraDir):
             continue
-        print "Check if the target file already exits or not?"
-        if os.path.exists(targetFile): # if existing target file exists and looks ok, skip
-            if isValidRootFile(targetFile):
-                print("Seems hadd is already performed.")
+        era = os.path.basename(eraDir)
+        logging.info("Processing era: {era}".format(era=era))
+
+        if era in Alreadymerged:
+            logging.info("Skipping this era as it is already merged.")
+            continue
+
+        targetFile = os.path.join(eraDir, '.root').replace('/.root', '.root')
+        filesToMerge = glob.glob(os.path.join(eraDir, '*.root'))
+
+        if len(filesToMerge) == 0:
+            logging.info("No files to merge. Skipping.")
+            continue
+
+        # Check if the target file already exists and is valid
+        if os.path.exists(targetFile):
+            if isValidAndFaultFree(targetFile):
+                logging.info("Seems hadd is already performed. Skipping.")
                 continue
-            else:   os.system('rm %s' % targetFile)
+            else:
+                logging.info("Removing invalid target file {targetFile}".format(targetFile=targetFile))
+                system_with_terminal_display('rm {targetFile}'.format(targetFile=targetFile))
 
-        print "Check if all the files that we need to hadd is valid or not?"
-        count = 0
-        # Log every 1000 lines.
-        LOG_EVERY_N = 500
-        for f in filesToMerge:
-            count += 1
-            if not isValidRootFile(f):
-                print('WARNING: something wrong with %s' % f)
-            if (count % LOG_EVERY_N) == 0: print ("Checking file validity for file count : {} ".format(count))
+        # Merge the files
+        merge_files(targetFile, filesToMerge)
 
-        print "Start the hadd step with 100 files at once."
-        if len(filesToMerge)>100:
-            print('A lof of files to merge, this might take some time...')
-
-            tempTargets = []
-            # split the list of all root files into chunk of 100 files
-            tempFilesToMerge = [filesToMerge[x:x+100] for x in range(0, len(filesToMerge), 100)]
-
-            # print "tempFilesToMerge:",len(tempFilesToMerge)
-            count = 1
-            for i in range(0,len(tempFilesToMerge)):
-                print "---"
-                tempTargetFile = targetFile.replace('.root', '-temp%s.root' % str(i))
-                print("tempTargetFile: %s"%tempTargetFile)
-                tempTargets.append(tempTargetFile)
-                if os.path.exists(tempTargetFile): # if existing target file exists and looks ok, skip
-                    if isValidRootFile(tempTargetFile): continue
-                    else:
-                        print("Removing temp hadd file {}".format(tempTargetFile))
-                        os.system('rm %s' % tempTargetFile)
-                # tempFilesToMerge = [f for f in filesToMerge if ('%s.root' % str(i)) in f]
-                # print(('python haddnano.py    %s %s' % (tempTargetFile, ' '.join(tempFilesToMerge[i]))))
-                os.system('python haddnano.py    %s %s' % (tempTargetFile, ' '.join(tempFilesToMerge[i])))
-                # if count > 0: break
-            os.system('python haddnano.py   %s %s' % (targetFile, ' '.join(tempTargets)))
-            for i in tempTargets:
-                system('rm %s' % i)
-        else:
-            print(system('python haddnano.py   %s %s' % (targetFile, ' '.join(filesToMerge))))
+if __name__ == "__main__":
+    main()
