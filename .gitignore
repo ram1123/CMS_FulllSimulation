@@ -1,4 +1,6 @@
 CMSSW_*/
+*.cc
+*.txt
 *.stdout
 *.lhe
 *.jdl

@@ -3,6 +3,7 @@
 ## Getting Configuration Files from mccm
 
 * To get the configuration files from mccm, you can use the following script: [GetCfgFile_GENToNano.sh](GetCfgFile_GENToNano.sh)
+    * The detailed instructions are in section [General Information](#general-information) below.
 * The generated configuration files can be found here: [UL2018_ConfigFiles](UL2018_ConfigFiles)
 
 ## Submitting Condor Jobs
@@ -16,10 +17,19 @@
     * This script uses a list of gridpacks defined in the following file: [gridpack_lists.py](gridpack_lists.py)
     * To run the script, simply type `python condor_setup_new.py` in your terminal.
 
-## Merging Nano Root Files
+### Proxy Setup for Condor Jobs on lxplus
+
+```bash
+voms-proxy-init --voms cms --valid 168:00
+cp /tmp/x509up_uXXXX ~/. # where `x509up_uXXXX` is the proxy file name created by previous command
+export X509_USER_PROXY=/afs/cern.ch/user/<Initials>/<USERNAME>/x509up_uXXXX
+```
+
+## Merging nanoAOD Root Files
 
 * The following Python script can be used to hadd nano root files: [mergeOutput.py](Scripts/mergeOutput.py)
-* To run the script, type `python Scripts/mergeOutput.py` in your terminal.
+    * This Python script merges ROOT files located in multiple directories. It is designed to be highly flexible, handling various edge cases like iszombie, no keys and overly large numbers of files to merge.
+* To run the script, type `python mergeOutput.py` in your terminal.
 
 
 # General Information
@@ -58,32 +68,3 @@ For the CMSSW full simulation, first choose the campaign which is closest to you
 4. Test each python configuration one after another in appropriate sequence to check if its fine. *There might be an issue of name of input root files. The script might not taking the input of previous step automatically because of naming difference. So you need to fix it.*
 
 5. Finally submit the condor job.
-
-# Condor info for Lxplus
-
-```bash
-voms-proxy-init --voms cms --valid 168:00
-cp /tmp/x509up_u48539 ~/. # where `x509up_u48539` is the proxy file name created by previous command
-export X509_USER_PROXY=/afs/cern.ch/user/r/rasharma/x509up_u48539
-```
-
-# Condor Job Submission [obselete]
-
-```bash
-git clone git@github.com:ram1123/CMS_FulllSimulation.git
-cd CMS_FulllSimulation
-git submodule init
-git submodule update
-```
-
-1. place all the python configuration file inside the directory `CMS_FulllSimulation`.
-2. Update the `RunGENSIM_condor.jdl` and `RunGENSIM_condor.sh` files.
-    1. In file `RunGENSIM_condor.sh` you need to replace the python configuration file name at appropriate places.
-    1. Add the appropriate number of events and jobs. For example:
-        1. If you want 50k events then you can change `Queue 50` in the jdl file and put 1000 in each python configuration files.
-1. submit the condor jobs.
-
-```bash
-voms-proxy-init --voms cms --valid 168:00
-condor_submit RunGENSIM_condor.jdl
-```

@@ -30,7 +30,6 @@ def isValidRootFile(fname):
 def checkfaulty(fname, ref = None):
     if not ref:
         ref = ROOT.TFile.Open(fname)
-    # logging.warning("Checking for faulty keys in file {fname}".format(fname=fname))
     faultyfiles = []  # Initialize an empty list to hold the names of faulty files
     probe = ROOT.TFile.Open(fname)
 
@@ -107,13 +106,7 @@ def main():
     logging.info("mainOutputDir: {mainOutputDir}".format(mainOutputDir=mainOutputDir))
 
     # List of already merged eras
-    Alreadymerged = [
-        'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-150to600',
-        'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
-        'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-600to800',
-        'WpZToLpNujj_01j_aTGC_pTZ-150toInf_mWV-800toInf',
-        'WmZToLmNujj_01j_aTGC_pTZ-150toInf_mWV-600to800'
-    ]
+    Alreadymerged = []
 
     # Loop through each era directory
     for eraDir in glob.glob("{mainOutputDir}/*".format(mainOutputDir=mainOutputDir)):
