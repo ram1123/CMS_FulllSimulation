@@ -1,6 +1,8 @@
 step*.py
 step*.sh
 CMSSW_*/
+Configuration/
+run*.sh
 *.cc
 *.txt
 *.stdout
