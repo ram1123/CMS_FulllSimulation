@@ -2,6 +2,8 @@ step*.py
 step*.sh
 CMSSW_*/
 Configuration/
+thread0/
+.__*
 run*.sh
 *.cc
 *.txt

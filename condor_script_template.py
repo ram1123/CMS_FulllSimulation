@@ -110,10 +110,29 @@ request_memory = 12000
 request_cpus = 8
 '''
 
+jdl_file_template_part1of2_VarInFile = '''Executable = {CondorExecutable}.sh
+Universe = vanilla
+Notification = ERROR
+Should_Transfer_Files = YES
+Transfer_Output_Files = ""
+Transfer_Input_Files = {CondorExecutable}.sh, {CommaSeparatedConfigFiles}
+x509userproxy = $ENV(X509_USER_PROXY)
+getenv      = True
++JobFlavour = "{CondorQueue}"
+request_memory = 12000
+request_cpus = 8
+'''
+
 
 jdl_file_template_part2of2 = '''Output = {CondorLogPath}/log_$(Cluster)_$(Process).stdout
-Error  = {CondorLogPath}/log_$(Cluster)_$(Process).stdout
-Log  = {CondorLogPath}/log_$(Cluster)_$(Process).stdout
-Arguments = $(Cluster) $(Process)   {OutPutDir} {GridpackWithPath}
+Error  = {CondorLogPath}/log_$(Cluster)_$(Process).stderr
+Log  = {CondorLogPath}/log_$(Cluster)_$(Process).log
+Arguments = $(Cluster) $(Process) {OutPutDir} {GridpackWithPath} {maxEvents}
 Queue {queue}
 '''
+
+ReplacementDict = {
+    '_slc7_amd64_gcc700':'',
+    '_CMSSW_10_6_19_tarball':'',
+    '.tar.xz':''
+}

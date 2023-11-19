@@ -60,7 +60,7 @@ def parse_script_for_config(script_name: str, config_file_path: str):
         with open(config_file_path, 'a') as f:
             f.write(f"{script_name},{CMSSWVersion},{CMSSW_ConfigFile}\n")
 
-def generate_executable_script(config_file: str):
+def generate_executable_script(config_file: str, args: argparse.Namespace):
     print(f"Generating executable script from {config_file}")
     cmssw_versions = {}
     cmssw_config_files = {}
@@ -70,7 +70,7 @@ def generate_executable_script(config_file: str):
             cmssw_versions[f"step{step.split('_')[0][-1]}"] = version
             cmssw_config_files[f"step{step.split('_')[0][-1]}"] = cmssw_config_file
 
-    with open('run_simulation.sh', 'w') as f:
+    with open(args.jobName + '.sh', 'w') as f:
         f.write(build_bash_script(cmssw_versions, cmssw_config_files))
 
 def build_bash_script(versions: dict, config_files: dict) -> str:
@@ -93,6 +93,8 @@ echo "Input Arguments (Output Dir): $3"
 echo "Input Arguments (Gridpack with path): $4"
 echo "Input Arguments (maxEvents): $5"
 echo ""
+
+export SCRAM_ARCH=slc7_amd64_gcc700
 
 # Setting up CMSSW versions and configuration files
 """
@@ -126,8 +128,19 @@ echo ""
         else:
             script_content += f"cmsRun ${{{step}_cfg}}\n"
         # script_content += "cd -\n"
+        script_content += "echo \"list all files\"\n"
+        script_content += "ls -ltrh\n"
 
-    script_content += "\necho \"Job finished\"\n"
+
+
+    # copy output nanoAOD file to output directory with cluster ID and process ID as suffix of the root file
+    script_content += "\n# Copy output nanoAOD file to output directory\n"
+    script_content += "echo \"Copying output nanoAOD file to output directory\"\n"
+    script_content += "ls -ltrh\n"
+    script_content += "echo \"cp -r HIG-RunIISummer20UL17NanoAODv9-03735.root $3/nanoAOD_$1_$2.root\"\n"
+    script_content += "cp -r HIG-RunIISummer20UL17NanoAODv9-03735.root $3/nanoAOD_$1_$2.root\n"
+    script_content += "echo \"Job finished on \" $(date)\n"
+
 
     return script_content
 
@@ -157,20 +170,84 @@ def url_validator(url: str) -> bool:
     # Implement URL validation logic
     return True
 
+from condor_script_template import jdl_file_template_part1of2_VarInFile, jdl_file_template_part2of2, ReplacementDict
+from gridpack_lists import models
+import datetime
+
+def generate_jdl_file(args: argparse.Namespace):
+    """Generate the JDL file."""
+    # Get comma separated list of config files from CMSSWConfigFile.txt
+    comma_separated_config_files = ""
+    with open('CMSSWConfigFile.txt', 'r') as f:
+        for line in f:
+            comma_separated_config_files += ', '+ line.split(',')[2].strip()
+
+    # print(f"Comma separated config files: {comma_separated_config_files}")
+    with open(args.jobName +'.jdl', 'w') as f:
+        f.write(jdl_file_template_part1of2_VarInFile.format(CondorExecutable=os.path.abspath(args.jobName), CommaSeparatedConfigFiles=comma_separated_config_files, CondorQueue=args.queue))
+
+            # CondorLogPath = os.path.join(os.getcwd(), 'log', gridpack.split('/')[-1].split('.tar.xz')[0])
+            # OutPutDir = os.path.join(args.outDir, gridpack.split('/')[-1].split('.tar.xz')[0])
+
+        for gridpack in models[args.model]:
+            # Create the output log path and output root file path, where the nanoAOD will be stored
+            # Also, add the date and time stamp to the path
+            TimeStamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            # print(f"TimeStamp: {TimeStamp}")
+            CondorLogPath = f"log/{args.model}/{gridpack.split('/')[-1].replace('_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz','')}/{TimeStamp}"
+            OutPutDir = f"{args.outDir}/{args.model}/{gridpack.split('/')[-1].replace('_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz','')}/{TimeStamp}"
+            # print(f"CondorLogPath: {CondorLogPath}")
+            # print(f"OutPutDir: {OutPutDir}")
+
+            # Update path with the Replacement dict
+            for key, value in ReplacementDict.items():
+                CondorLogPath = CondorLogPath.replace(key, value)
+                OutPutDir = OutPutDir.replace(key, value)
+
+            os.makedirs(CondorLogPath, exist_ok=True)
+            os.makedirs(OutPutDir, exist_ok=True)
+
+            # Update the jdl file
+            f.write(jdl_file_template_part2of2.format(CondorLogPath=CondorLogPath, OutPutDir=OutPutDir, GridpackWithPath=gridpack, maxEvents=args.nevents, queue=args.nJobs))
+
+            # break
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Script to automate CMSSW script processing')
     parser.add_argument('--nevents', type=int, default=100, help='Number of events to process')
     parser.add_argument('--run_exec', action='store_true', help='Run the executable script after creation')
     parser.add_argument('--NOdownload', action='store_true', help='Do not download the scripts')
+    parser.add_argument('--model', type=str, default='WWbbgg', help='Gridpack model from gridpack_lists.py')
+    parser.add_argument('--queue', type=str, default='testmatch',choices=['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek'],  help='Condor queue to use')
+    parser.add_argument('--outDir', type=str, default='/eos/user/r/rasharma/post_doc_ihep/HHTobbGG/', help='Output directory')
+    parser.add_argument('--nJobs', type=int, default=1, help='Number of jobs to submit with each gridpack')
+    parser.add_argument('--jobName', type=str, default='run_simulation_wwbbgg', help='Job name')
     return parser.parse_args()
+
+
+def printInfoToSubmit(args: argparse.Namespace):
+    CondorExecutable = os.path.abspath(args.jobName)
+
+    print("===> Set Proxy Using:")
+    print("\033[92mvoms-proxy-init --voms cms --valid 168:00\033[0m")
+    print("===> copy proxy to home path")
+    print("\033[92mcp /tmp/x509up_u48539 ~/\033[0m")
+    print("===> export the proxy")
+    print("\033[92mexport X509_USER_PROXY=~/x509up_u48539\033[0m")
+    print("===> Submit jobs using:")
+    print(f"\033[92mcondor_submit {CondorExecutable}.jdl\033[0m")
 
 def main():
     args = parse_arguments()
 
     print(f"Number of events: {args.nevents}")
 
-    download_and_prepare_scripts(ChainDownloadLinkFromMccM_dict, args)
-    generate_executable_script('CMSSWConfigFile.txt')
+    # download_and_prepare_scripts(ChainDownloadLinkFromMccM_dict, args)
+    generate_executable_script('CMSSWConfigFile.txt', args)
+    generate_jdl_file(args)
+    printInfoToSubmit(args)
+
 
 if __name__ == "__main__":
     main()
