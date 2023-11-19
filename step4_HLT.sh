@@ -11,8 +11,7 @@
 # say "Get test command" when you hover your mouse over it  #
 #      If you try to run this, you will have a bad time     #
 #############################################################
-
-##cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17HLT-03331/
+#cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17HLT-03331/
 
 # Make voms proxy
 voms-proxy-init --voms cms --out $(pwd)/voms_proxy.txt --hours 4

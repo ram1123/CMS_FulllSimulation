@@ -2,7 +2,7 @@
 # using:
 # Revision: 1.19
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
-# with command line options: --python_filename HIG-RunIISummer20UL17MiniAODv2-03331_1_cfg.py --eventcontent MINIAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier MINIAODSIM --fileout file:HIG-RunIISummer20UL17MiniAODv2-03331.root --conditions 106X_mc2017_realistic_v9 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein dbs:/GluGluToRadionToHHTo2B2G_M-1500_TuneCP5_PSWeights_narrow_13TeV-madgraph-pythia8/RunIISummer20UL17RECO-106X_mc2017_realistic_v6-v1/AODSIM --era Run2_2017 --runUnscheduled --no_exec --mc -n 10000
+# with command line options: --python_filename HIG-RunIISummer20UL17MiniAODv2-03331_1_cfg.py --eventcontent MINIAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier MINIAODSIM --fileout file:HIG-RunIISummer20UL17MiniAODv2-03331.root --conditions 106X_mc2017_realistic_v9 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein file:HIG-RunIISummer20UL17RECO-03331.root --era Run2_2017 --runUnscheduled --no_exec --mc -n 10000
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
@@ -30,7 +30,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(),
+    fileNames = cms.untracked.vstring('file:HIG-RunIISummer20UL17RECO-03331.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 

@@ -12,7 +12,7 @@
 #      If you try to run this, you will have a bad time     #
 #############################################################
 
-##cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17NanoAODv9-03735/
+#cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17NanoAODv9-03735/
 
 # Make voms proxy
 voms-proxy-init --voms cms --out $(pwd)/voms_proxy.txt --hours 4
@@ -49,4 +49,4 @@ EVENTS=10000
 
 
 # cmsDriver command
-cmsDriver.py  --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOEDMAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein flile:HIG-RunIISummer20UL17MiniAODv2-03331.root  --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n $EVENTS || exit $? ;
+cmsDriver.py  --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root  --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n $EVENTS || exit $? ;
