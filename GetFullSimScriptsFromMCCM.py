@@ -66,14 +66,17 @@ def generate_executable_script(config_file: str, args: argparse.Namespace):
     cmssw_config_files = {}
     with open(config_file, 'r') as f:
         for line in f:
+            if args.UseCustomNanoAOD:
+                # Update the CMSSW version from CMSSW_10_6_26 to CMSSW_10_6_30
+                line = line.replace('CMSSW_10_6_26', 'CMSSW_10_6_30')
             step, version, cmssw_config_file = line.strip().split(',')
             cmssw_versions[f"step{step.split('_')[0][-1]}"] = version
             cmssw_config_files[f"step{step.split('_')[0][-1]}"] = cmssw_config_file
 
     with open(args.jobName + '.sh', 'w') as f:
-        f.write(build_bash_script(cmssw_versions, cmssw_config_files))
+        f.write(build_bash_script(cmssw_versions, cmssw_config_files, args))
 
-def build_bash_script(versions: dict, config_files: dict) -> str:
+def build_bash_script(versions: dict, config_files: dict, args: argparse.Namespace) -> str:
     """
     Constructs the bash script content based on the provided CMSSW versions and configuration files.
     """
@@ -120,6 +123,9 @@ export SCRAM_ARCH=slc7_amd64_gcc700
         script_content += f"fi\n"
         script_content += f"cd ${{{step}}}/src\n"
         script_content += f"eval `scram runtime -sh`\n"
+        if args.UseCustomNanoAOD and step == 'step7':
+            script_content += f"git cms-merge-topic -u ram1123:CMSSW_10_6_30_HHWWgg_nanoV9\n"
+            script_content += f"./PhysicsTools/NanoTuples/scripts/install_onnxruntime.sh\n"
         script_content += f"scram b\n"
         script_content += f"cd -\n"
         if i == 1:
@@ -212,17 +218,24 @@ def generate_jdl_file(args: argparse.Namespace):
 
             # break
 
+def customNanoAOD():
+    # git cms-merge-topic -u ram1123:CMSSW_10_6_30_HHWWgg_nanoV9
+    # ./PhysicsTools/NanoTuples/scripts/install_onnxruntime.sh
+    # scramv1 b -j 8
+    pass
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Script to automate CMSSW script processing')
     parser.add_argument('--nevents', type=int, default=100, help='Number of events to process')
     parser.add_argument('--run_exec', action='store_true', help='Run the executable script after creation')
     parser.add_argument('--NOdownload', action='store_true', help='Do not download the scripts')
-    parser.add_argument('--model', type=str, default='WWbbgg', help='Gridpack model from gridpack_lists.py')
+    parser.add_argument('--model', type=str, default='HHbbgg', help='Gridpack model from gridpack_lists.py')
     parser.add_argument('--queue', type=str, default='testmatch',choices=['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek'],  help='Condor queue to use')
-    parser.add_argument('--outDir', type=str, default='/eos/user/r/rasharma/post_doc_ihep/HHTobbGG/', help='Output directory')
+    parser.add_argument('--outDir', type=str, default='/eos/user/r/rasharma/post_doc_ihep/HHTobbGG', help='Output directory')
     parser.add_argument('--nJobs', type=int, default=1, help='Number of jobs to submit with each gridpack')
-    parser.add_argument('--jobName', type=str, default='run_simulation_wwbbgg', help='Job name')
+    parser.add_argument('--jobName', type=str, default='run_simulation_HHbbgg', help='Job name')
+    parser.add_argument('--UseCustomNanoAOD', action='store_true', help='Use custom nanoAOD file for H->GammaGamma analysis')
     return parser.parse_args()
 
 

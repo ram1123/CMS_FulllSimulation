@@ -21,15 +21,16 @@ export X509_USER_PROXY=$(pwd)/voms_proxy.txt
 export SCRAM_ARCH=slc7_amd64_gcc700
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-if [ -r CMSSW_10_6_26/src ] ; then
-  echo release CMSSW_10_6_26 already exists
+if [ -r CMSSW_10_6_30/src ] ; then
+  echo release CMSSW_10_6_30 already exists
 else
-  scram p CMSSW CMSSW_10_6_26
+  scram p CMSSW CMSSW_10_6_30
 fi
-cd CMSSW_10_6_26/src
+cd CMSSW_10_6_30/src
 eval `scram runtime -sh`
-
-cp -r ../../Configuration .
+# cp -r ../../Configuration .
+git cms-merge-topic -u ram1123:CMSSW_10_6_30_HHWWgg_nanoV9
+./PhysicsTools/NanoTuples/scripts/install_onnxruntime.sh
 scram b
 cd ../..
 
@@ -49,4 +50,4 @@ EVENTS=10000
 
 
 # cmsDriver command
-cmsDriver.py  --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root  --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n $EVENTS || exit $? ;
+cmsDriver.py  --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM  --customise PhysicsTools/NanoTuples/nanoTuples_cff.nanoTuples_customizeMC --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root  --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n $EVENTS || exit $? ;

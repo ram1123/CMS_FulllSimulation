@@ -2,7 +2,7 @@
 # using:
 # Revision: 1.19
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
-# with command line options: --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n 10000
+# with command line options: --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM --customise PhysicsTools/NanoTuples/nanoTuples_cff.nanoTuples_customizeMC --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n 10000
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
@@ -80,6 +80,12 @@ from PhysicsTools.NanoAOD.nano_cff import nanoAOD_customizeMC
 
 #call to customisation function nanoAOD_customizeMC imported from PhysicsTools.NanoAOD.nano_cff
 process = nanoAOD_customizeMC(process)
+
+# Automatic addition of the customisation function from PhysicsTools.NanoTuples.nanoTuples_cff
+from PhysicsTools.NanoTuples.nanoTuples_cff import nanoTuples_customizeMC
+
+#call to customisation function nanoTuples_customizeMC imported from PhysicsTools.NanoTuples.nanoTuples_cff
+process = nanoTuples_customizeMC(process)
 
 # Automatic addition of the customisation function from Configuration.DataProcessing.Utils
 from Configuration.DataProcessing.Utils import addMonitoring
