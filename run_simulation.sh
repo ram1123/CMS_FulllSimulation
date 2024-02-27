@@ -15,6 +15,8 @@ echo "Input Arguments (Gridpack with path): $4"
 echo "Input Arguments (maxEvents): $5"
 echo ""
 
+export SCRAM_ARCH=slc7_amd64_gcc700
+
 # Setting up CMSSW versions and configuration files
 step1=CMSSW_10_6_30_patch1
 step1_cfg=HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py

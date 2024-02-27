@@ -1,5 +1,5 @@
 models = {
-    'WWbbgg':[
+    'HHbbgg':[
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M250/v1/Radion_hh_narrow_M250_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M260/v1/Radion_hh_narrow_M260_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M270/v1/Radion_hh_narrow_M270_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',

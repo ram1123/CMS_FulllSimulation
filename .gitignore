@@ -3,6 +3,9 @@ step*.sh
 CMSSW_*/
 Configuration/
 thread0/
+*.stderr
+*.stdout
+*.log
 .__*
 run*.sh
 *.cc
