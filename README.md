@@ -70,9 +70,12 @@ export X509_USER_PROXY=/afs/cern.ch/user/<Initials>/<USERNAME>/x509up_uXXXX
 
 ```bash
 python3 GetFullSimScriptsFromMCCM.py --nevents 5000 --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbGGv2 --nJobs 100 --jobName run_simulation_HHbbgg_12Mar2024 --UseCustomNanoAOD
+
+# 1 April 2024
+python3 GetFullSimScriptsFromMCCM.py --nevents 100 --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_DEBUG --nJobs 1 --jobName runFullSim_HHTobbgg_Apr2024 --UseCustomNanoAOD --model 'HHbbgg' --debug --queue 'longlunch'
 ```
 
-***1 April 2024***
+***OLD***
 
 ```bash
 python3 condor_setup_new.py --condor_executable="HHbbgg" --TopLogDirectory="Log_Apr2024" --output_dir_name="/eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/" --condor_q
