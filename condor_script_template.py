@@ -12,10 +12,12 @@ echo "Input Arguments (Cluster ID): $1"
 echo "Input Arguments (Proc ID): $2"
 echo "Input Arguments (Output Dir): $3"
 echo "Input Arguments (Gridpack with path): $4"
+echo "Input Arguments (maxEvents): $5"
 
 echo "i am here ${{PWD}}"
 
 seed=$((${{1}} + ${{2}} + 189))
+maxEvents=$5
 #seed=123
 basePath=${{PWD}}
 step1=CMSSW_10_6_30_patch1
@@ -71,7 +73,7 @@ do
     echo "runnning step_${{i}}_cfg.py"
     if [ $i -eq 1 ]
     then
-        cmsRun step_${{i}}_cfg.py seedval=${{seed}}
+        cmsRun step_${{i}}_cfg.py seedval=${{seed}} maxEvents=${{maxEvents}}
         echo "================================================="
         echo "List the root files"
         ls *.root
@@ -104,6 +106,8 @@ Should_Transfer_Files = YES
 Transfer_Output_Files = ""
 Transfer_Input_Files = {CondorExecutable}.sh, UL2018_ConfigFiles/step_1_cfg.py, UL2018_ConfigFiles/step_2_cfg.py, UL2018_ConfigFiles/step_3_cfg.py, UL2018_ConfigFiles/step_4_cfg.py, UL2018_ConfigFiles/step_5_cfg.py, UL2018_ConfigFiles/step_6_cfg.py, UL2018_ConfigFiles/step_7_cfg.py
 x509userproxy = $ENV(X509_USER_PROXY)
+requirements = TARGET.OpSysAndVer =?= "AlmaLinux9"
+MY.WantOS = "el7"
 getenv      = True
 +JobFlavour = "{CondorQueue}"
 request_memory = 12000
