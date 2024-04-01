@@ -64,3 +64,17 @@ export X509_USER_PROXY=/afs/cern.ch/user/<Initials>/<USERNAME>/x509up_uXXXX
 4. Test each python configuration one after another in appropriate sequence to check if its fine. *There might be an issue of name of input root files. The script might not taking the input of previous step automatically because of naming difference. So you need to fix it.*
 
 5. Finally submit the condor job.
+
+
+# List of commands used
+
+```bash
+python3 GetFullSimScriptsFromMCCM.py --nevents 5000 --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbGGv2 --nJobs 100 --jobName run_simulation_HHbbgg_12Mar2024 --UseCustomNanoAOD
+```
+
+***1 April 2024***
+
+```bash
+python3 condor_setup_new.py --condor_executable="HHbbgg" --TopLogDirectory="Log_Apr2024" --output_dir_name="/eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/" --condor_q
+ueue=longlunch --queue=1 --maxEvents=100 --debug
+```

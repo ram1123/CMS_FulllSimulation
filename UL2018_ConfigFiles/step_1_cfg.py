@@ -31,7 +31,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1500)
+    input = cms.untracked.int32(options.maxEvents)
 )
 
 # Input source
@@ -43,7 +43,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('Configuration/GenProduction/python/EXO-RunIISummer20UL18wmLHEGEN-01092-fragment.py nevts:1500'),
+    annotation = cms.untracked.string('Configuration/GenProduction/python/EXO-RunIISummer20UL18wmLHEGEN-01092-fragment.py nevts:'+str(options.maxEvents)),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -176,7 +176,7 @@ process.generator = cms.EDFilter("Pythia8ConcurrentHadronizerFilter",
 process.externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
     args = cms.vstring('/eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz'),
     generateConcurrently = cms.untracked.bool(True),
-    nEvents = cms.untracked.uint32(1500),
+    nEvents = cms.untracked.uint32(options.maxEvents),
     numberOfParameters = cms.uint32(1),
     outputFile = cms.string('cmsgrid_final.lhe'),
     scriptName = cms.FileInPath('GeneratorInterface/LHEInterface/data/run_generic_tarball_cvmfs.sh')
