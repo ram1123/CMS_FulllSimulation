@@ -26,3 +26,5 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
    Unless you are changing any condor submission parameters or workflow, you don't need to change this file.
    For proper naming convention based on gridpack file name, you may need to update the `ReplacementDict` dictionary in this file.
 
+
+***NOTE:*** It would be good if you first test locally the `.sh` file obtained by this script for say 50 events. This will help you to understand the workflow and also to check if the script is working properly. Once you are satisfied with the local test, you can submit the jobs to condor. You may need to copy the CMSSW config file to the local directory.
