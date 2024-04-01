@@ -1,2 +1,0 @@
-step1_wmLHEGEN.sh,CMSSW_10_6_30_patch1,HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py
-step2_SIM.sh,CMSSW_10_6_17_patch1,HIG-RunIISummer20UL17SIM-03331_1_cfg.py
