@@ -32,9 +32,10 @@ import datetime
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Importing configurations from external files
-from ChainDownloadLinkFromMccM_dict import ChainDownloadLinkFromMccM_dict
-from condor_script_template import jdl_file_template_part1of2, jdl_file_template_part2of2, ReplacementDict
-from gridpack_lists import models
+from utils.ChainDownloadLinkFromMccM_dict import ChainDownloadLinkFromMccM_dict
+from utils.condor_script_template import jdl_file_template_part1of2, jdl_file_template_part2of2, ReplacementDict
+from utils.gridpack_lists import models
+
 
 def run_subprocess(command: list, task_description: str) -> subprocess.CompletedProcess:
     """Execute a subprocess command and handle errors."""
@@ -256,7 +257,7 @@ def parse_arguments():
     parser.add_argument('--nevents', type=int, default=100, help='Number of events to process')
     parser.add_argument('--run_exec', action='store_true', help='Run the executable script after creation')
     parser.add_argument('--NOdownload', action='store_true', help='Do not download the scripts')
-    parser.add_argument('--CMSSWConfigFile', type=str, default='CMSSWConfigFile.txt', help='Name of the CMSSW configuration file')
+    parser.add_argument('--CMSSWConfigFile', type=str, default='utils/CMSSWConfigFile.txt', help='Name of the CMSSW configuration file')
     parser.add_argument('--model', type=str, default='HHbbgg', help='Gridpack model from gridpack_lists.py')
     parser.add_argument('--queue', type=str, default='testmatch',choices=['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek'],  help='Condor queue to use')
     parser.add_argument('--outDir', type=str, help='Output directory', required=True)
