@@ -65,9 +65,10 @@ with open(f"{CondorExecutable}.jdl","w") as fout:
     # Loop over all gridpacks  to  add them in the jdl file
     for gridpackWithPath in models['HHbbgg']:
         short_name = gridpackWithPath.split('/')[-1].replace('_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz','')
+        short_name = short_name.replace('_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz','')
 
         # Create the output path, where the nanoAOD will be stored
-        output_rootfile_path =  f"{outputDirName}/{short_name}"
+        output_rootfile_path =  f"{outputDirName}/{CondorExecutable}/{short_name}"
         os.makedirs(output_rootfile_path, exist_ok=True)
 
         # Create the output log file path
@@ -96,4 +97,4 @@ print("cp /tmp/x509up_u48539 ~/")
 print("===> export the proxy")
 print("export X509_USER_PROXY=~/x509up_u48539")
 print("===> Submit the job using the command:")
-print("condor_submit {CondorExecutable}.jdl".format(CondorExecutable=CondorExecutable))
+print(f'condor_submit {CondorExecutable}.jdl')
