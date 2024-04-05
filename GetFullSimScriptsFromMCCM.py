@@ -20,6 +20,7 @@ The script performs the following tasks:
 """
 
 import os
+import re
 import sys
 import subprocess
 import logging
@@ -104,8 +105,10 @@ def download_script(url: str, script_name: str):
     logging.info(f'Downloading {script_name} from {url}')
     run_subprocess(["wget", url, "-O", script_name], f'downloading {script_name}')
 
-def modify_script(script_name: str):
+def modify_script(script_name: str, config_file_path: Path):
     """Perform modifications on the downloaded script using sed command."""
+    logging.debug(f'Modifying {script_name}')
+    logging.debug(f'Config file path: {config_file_path}')
     script_path = Path(script_name)
     if not script_path.exists():
         logging.error(f'Script not found: {script_name}')
@@ -114,7 +117,75 @@ def modify_script(script_name: str):
     run_subprocess(["sed", "-i", "s/mv ../cp -r ../g", script_name], 'replacing mv with cp -r')
     run_subprocess(["chmod", "+x", script_name], 'making script executable')
 
-def parse_script_for_config(script_name: str, config_file_path: str):
+    # Get the input file name and output file name from the script
+    filein_name = None
+    fileout_name = None
+
+    # Read and search for filein and fileout
+    with open(script_path, 'r') as file:
+        for line in file:
+            if 'cmsDriver.py' in line:
+                # Search for --filein and --fileout values
+                filein_match = re.search(r"--filein (file:[^\s]+)", line)
+                fileout_match = re.search(r"--fileout (file:[^\s]+)", line)
+
+                if filein_match:
+                    filein_name = filein_match.group(1)
+                else:
+                    if "step1" not in str(script_name):
+                        logging.warning(f"Filein not found in {script_name}, so lets grab it from the CMSSW config file which is --CMSSWConfigFile its format is json")
+                        with open(config_file_path, 'r') as file:
+                            config_data = json.load(file)[0]
+                            for step, details in config_data.items():
+                                logging.warning(f"Step: {step}")
+                                logging.warning(f"  Script Name: {details['script_name']}")
+                                logging.warning(f"  fileout: {details['fileout']}")
+                                filein_name = details['fileout']    # FIXME: It dpends on the last argument. If it read the json in random order then it may break
+                                # Replace --filein in the script
+                                update_filein_in_script(script_path, filein_name)
+
+                if fileout_match:
+                    fileout_name = fileout_match.group(1)
+                break
+
+    logging.info(f"Filein: {filein_name}, Fileout: {fileout_name}")
+
+    return filein_name, fileout_name
+
+def update_filein_in_script(script_path, new_filein):
+    """
+    Update the --filein argument in a CMS driver script.
+
+    Args:
+    - script_path: Path to the script file.
+    - new_filein: New value to set for --filein.
+    """
+    # Ensure script_path is a Path object for easier handling
+    script_path = Path(script_path) if not isinstance(script_path, Path) else script_path
+
+    # Read the existing script content
+    with open(script_path, 'r') as file:
+        lines = file.readlines()
+
+    # Prepare the new content
+    new_content = []
+    filein_pattern = re.compile(r'--filein \S+')
+    for line in lines:
+        # Check if this line contains the --filein argument
+        if '--filein' in line:
+            # Replace the entire --filein argument
+            new_line = filein_pattern.sub(f'--filein {new_filein}', line)
+            new_line = new_line.replace("NANOEDMAODSIM", "NANOAODSIM")
+            new_content.append(new_line)
+        else:
+            new_content.append(line)
+
+
+    # Write the modified content back to the script
+    with open(script_path, 'w') as file:
+        file.writelines(new_content)
+
+def parse_script_for_config(script_name: str, config_file_path: str, filein_name: str, fileout_name: str):
     """Extract CMSSW version and config file information from a script."""
     CMSSWVersion, CMSSW_ConfigFile = None, None
     with open(script_name, 'r') as file:
@@ -128,7 +199,9 @@ def parse_script_for_config(script_name: str, config_file_path: str):
         details = {
             'script_name': str(script_name),
             'CMSSWVersion': CMSSWVersion,
-            'CMSSW_ConfigFile': str( script_name.parent / CMSSW_ConfigFile )
+            'CMSSW_ConfigFile': str( script_name.parent / CMSSW_ConfigFile ),
+            'filein': filein_name,
+            'fileout': fileout_name
         }
 
         # Extract step name from script_name (excluding the file extension)
@@ -177,8 +250,8 @@ def download_and_prepare_scripts(chain_dict: OrderedDict, args: argparse.Namespa
             logging.info(f'Skipping download for {key}')
         else:
             download_script(value, script_path)
-        modify_script(script_path)
-        parse_script_for_config(script_path, config_file_path)
+        filein_name, fileout_name = modify_script(script_path, config_file_path)
+        parse_script_for_config(script_path, config_file_path, filein_name, fileout_name)
 
         if args.run_exec:
             # change the directory to the script path and run the script
@@ -425,7 +498,6 @@ def main():
     logging.info(f"Processing with the following parameters: {args}")
 
     if not args.NOdownload:
-        # FIXME: Place the generated config files to appropriate directory ConfigFiles/HHTobbgg/Summer20UL17/
         # FIXME: Improve this function and the working of `NOdownload` flag
         # INFO: Users may need to modify the generated .sh file or the configuration file
         download_and_prepare_scripts(ChainDownloadLinkFromMccM_dict, args)
@@ -441,7 +513,7 @@ def main():
 
             if user_input == 'yes' or user_input == 'y':
                 logging.info("Continuing with the script processing.")
-                generate_executable_script(args)  # FIXME: Hardcoded file name
+                generate_executable_script(args)
                 generate_jdl_file(args)
                 printInfoToSubmit(args)
             else:
