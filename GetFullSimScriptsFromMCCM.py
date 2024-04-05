@@ -20,6 +20,7 @@ The script performs the following tasks:
 """
 
 import os
+import sys
 import subprocess
 import logging
 import argparse
@@ -27,9 +28,39 @@ from urllib.parse import urlparse
 from pathlib import Path
 from collections import OrderedDict
 import datetime
+import json
 
 # Setup logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+class ColorfulFormatter(logging.Formatter):
+    """Custom logging Formatter that adds colors."""
+
+    grey = "\x1b[38;21m"
+    yellow = "\x1b[33;21m"
+    red = "\x1b[31;21m"
+    bold_red = "\x1b[31;1m"
+    green = "\x1b[33m"
+    blue = "\x1b[34m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+    FORMATS = {
+        logging.DEBUG: green + format + reset,
+        logging.INFO: blue + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
+logger.handlers[0].setFormatter(ColorfulFormatter())
 
 # Importing configurations from external files
 from utils.ChainDownloadLinkFromMccM_dict import ChainDownloadLinkFromMccM_dict
@@ -45,6 +76,16 @@ def run_subprocess(command: list, task_description: str) -> subprocess.Completed
         return result
     except subprocess.CalledProcessError as e:
         logging.error(f'Error during {task_description}: {e.stderr}')
+        raise
+
+def run_subprocess_os(command: str, task_description: str):
+    """As running the bash script from mccm requires the grid password, we need to run the script using os.system."""
+    try:
+        logging.info(f'Running {task_description}')
+        os.system(command)
+        logging.info(f'Successfully completed {task_description}')
+    except Exception as e:
+        logging.error(f'Error during {task_description}: {e}')
         raise
 
 def url_validator(url: str) -> bool:
@@ -84,43 +125,104 @@ def parse_script_for_config(script_name: str, config_file_path: str):
                 CMSSW_ConfigFile = line.split('--python_filename')[1].split()[0].strip()
 
     if CMSSWVersion and CMSSW_ConfigFile:
-        with open(config_file_path, 'a') as f:
-            f.write(f"{script_name},{CMSSWVersion},{CMSSW_ConfigFile}\n")
+        details = {
+            'script_name': str(script_name),
+            'CMSSWVersion': CMSSWVersion,
+            'CMSSW_ConfigFile': str( script_name.parent / CMSSW_ConfigFile )
+        }
+
+        # Extract step name from script_name (excluding the file extension)
+        step_name = Path(script_name).stem
+
+        update_json_file(config_file_path, step_name, details)
+
+def update_json_file(config_file_path, step_name, details):
+    # Initialize an empty dictionary to hold all configurations
+    all_configs = {}
+
+    # If the file exists and is not empty, load its content
+    if Path(config_file_path).is_file():
+        with open(config_file_path, 'r') as file:
+            try:
+                # The JSON file should contain a list with a single object
+                all_configs = json.load(file)[0]
+            except json.JSONDecodeError:
+                pass  # If JSON is empty or invalid, we keep all_configs empty
+
+    # Update the dictionary with the new step details
+    all_configs[step_name] = details
+
+    # Write the updated configurations back to the file
+    with open(config_file_path, 'w') as file:
+        # Wrapping the dictionary in a list
+        json.dump([all_configs], file, indent=4)
 
 def download_and_prepare_scripts(chain_dict: OrderedDict, args: argparse.Namespace):
     """Download and prepare scripts from the provided dictionary."""
-    config_file_path = args.CMSSWConfigFile
+    # config_file_path = Path(args.CMSSWConfigFile)
+    config_file_path = Path('ConfigFiles') / args.model / args.year / args.CMSSWConfigFile
     if os.path.exists(config_file_path):
         os.remove(config_file_path)
 
-    for key, value in chain_dict.items():
+    logging.debug(f'Chain dict: {chain_dict}')
+    for key, value in chain_dict[args.model][args.year].items():
         logging.info(f'Starting preparation for {key}')
+        logging.debug(f'Value: {value}')
         script_name = f"{key}.sh"
+        script_path =  Path(script_name)
+        script_path = Path('ConfigFiles') / args.model / args.year / script_path
+        script_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+
         if args.NOdownload:
             logging.info(f'Skipping download for {key}')
         else:
-            download_script(value, script_name)
-        modify_script(script_name)
-        parse_script_for_config(script_name, config_file_path)
+            download_script(value, script_path)
+        modify_script(script_path)
+        parse_script_for_config(script_path, config_file_path)
 
         if args.run_exec:
-            run_subprocess(["./" + script_name], f'executing {script_name}')
+            # change the directory to the script path and run the script
+            logging.info(f'Executing {script_path}')
+            os.chdir(script_path.parent)
+            logging.debug(f'Current directory: {os.getcwd()}')
+            run_subprocess_os("./" + str(script_path.name), f'executing {script_path}')
+            # change back to the original directory
+            os.chdir(os.path.dirname(os.path.realpath(__file__)))
+            logging.debug(f'Current directory: {os.getcwd()}')
 
         logging.info(f'Finished {key}')
 
-def generate_executable_script(config_file: str, args: argparse.Namespace):
+def generate_executable_script(args: argparse.Namespace):
     """Generate an executable script from the configuration file."""
-    logging.info(f"Generating executable script from {config_file}")
+
+    config_file_path = Path('ConfigFiles') / args.model / args.year / args.CMSSWConfigFile
+    logging.info(f"Generating executable script from {config_file_path}")
+
     cmssw_versions = {}
     cmssw_config_files = {}
-    with open(config_file, 'r') as f:
-        for line in f:
-            if args.UseCustomNanoAOD:
-                # Update the CMSSW version from CMSSW_10_6_26 to CMSSW_10_6_30
-                line = line.replace('CMSSW_10_6_26', 'CMSSW_10_6_30')
-            step, version, cmssw_config_file = line.strip().split(',')
-            cmssw_versions[f"step{step.split('_')[0][-1]}"] = version
-            cmssw_config_files[f"step{step.split('_')[0][-1]}"] = cmssw_config_file.split('/')[-1]
+
+    with open(config_file_path, 'r') as file:
+        config_data = json.load(file)[0]
+
+    # Iterate through the dictionary to print details for each step
+    for step, details in config_data.items():
+        logging.debug(f"Step: {step}")
+        logging.debug(f"  Script Name: {details['script_name']}")
+        logging.debug(f"  CMSSW Version: {details['CMSSWVersion']}")
+        logging.debug(f"  CMSSW Config File: {details['CMSSW_ConfigFile']}\n")
+        script_name = details['script_name']
+        CMSSWVersion = details['CMSSWVersion']
+        CMSSW_ConfigFile = details['CMSSW_ConfigFile']
+
+        # Conditionally update the CMSSW version if the argument is set
+        if args.UseCustomNanoAOD and CMSSWVersion == 'CMSSW_10_6_26':
+            CMSSWVersion = 'CMSSW_10_6_30'
+
+        # Extract the numeric part of the step for use in the dictionaries
+        step_number = step.split('_')[0][-1]
+
+        cmssw_versions[f"step{step_number}"] = CMSSWVersion
+        cmssw_config_files[f"step{step_number}"] = CMSSW_ConfigFile
 
     script_content = build_bash_script(cmssw_versions, cmssw_config_files, args)
     with open(args.jobName + '.sh', 'w') as f:
@@ -200,10 +302,12 @@ def generate_jdl_file(args: argparse.Namespace):
     log_dir = Path("log")
     log_dir.mkdir(exist_ok=True)
 
-    # Prepare the comma-separated list of configuration files
+    # Prepare the comma-separated list of configuration files from JSON file
+    config_file_path = Path('ConfigFiles') / args.model / args.year / Path(args.CMSSWConfigFile)
     comma_separated_config_files = ''
-    with open(args.CMSSWConfigFile, 'r') as f:
-        comma_separated_config_files = ', '.join(line.split(',')[2].strip() for line in f)
+    with open(config_file_path, 'r') as file:
+        config_data = json.load(file)[0]
+    comma_separated_config_files = ', '.join(details['CMSSW_ConfigFile'] for step, details in config_data.items())
 
     # Prepare paths and template replacements
     jdl_content = []
@@ -250,6 +354,40 @@ def generate_jdl_file(args: argparse.Namespace):
 
     logging.info(f"JDL file '{jdl_filename}' has been generated.")
 
+def UpdatewmLHEConfigFile():
+    """Update the wmLHEConfigFile with the gridpack path, nevents, and seed."""
+    # Append the gridpack path, nevents, and seed to the LHE config file
+    logging.info("Appending gridpack path, nevents, and seed to the LHE config file.")
+
+    ArgInfo = """
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing ('analysis')
+options.register ('seedval',
+            1238,
+            VarParsing.multiplicity.singleton,
+            VarParsing.varType.int,
+            "random seed for event generation")
+options.register ('gridpack',
+            '',
+            VarParsing.multiplicity.singleton,
+            VarParsing.varType.string,
+            "gridpack with path")
+options.parseArguments()
+"""
+    with open(Path('ConfigFiles') / args.model / args.year / 'HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py', 'r') as file:
+        data = file.readlines()
+
+    insert_index = 0
+    insert_index = next((i for i, line in enumerate(data) if 'from Configuration.Eras' in line), None) + 1
+    data.insert(insert_index, ArgInfo)
+
+    ArgInfo = """process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"""
+    insert_index = next((i for i, line in enumerate(data) if 'process.maxEvents ' in line), None) - 1
+    data.insert(insert_index, ArgInfo)
+
+    with open(Path('ConfigFiles') / args.model / args.year / 'HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py', 'w') as file:
+        file.writelines(data)
+    logging.debug("Exitting after appending gridpack path, nevents, and seed to the LHE config file.")
 
 def parse_arguments():
     """Parse command-line arguments."""
@@ -257,8 +395,9 @@ def parse_arguments():
     parser.add_argument('--nevents', type=int, default=100, help='Number of events to process')
     parser.add_argument('--run_exec', action='store_true', help='Run the executable script after creation')
     parser.add_argument('--NOdownload', action='store_true', help='Do not download the scripts')
-    parser.add_argument('--CMSSWConfigFile', type=str, default='utils/CMSSWConfigFile.txt', help='Name of the CMSSW configuration file')
+    parser.add_argument('--CMSSWConfigFile', type=str, default='CMSSWConfigFile.json', help='Name of the CMSSW configuration file, default path should be in ConfigFiles/model/year/')
     parser.add_argument('--model', type=str, default='HHbbgg', help='Gridpack model from gridpack_lists.py')
+    parser.add_argument('--year', type=str, default='2017', help='Year of the gridpack')
     parser.add_argument('--queue', type=str, default='testmatch',choices=['espresso', 'microcentury', 'longlunch', 'workday', 'tomorrow', 'testmatch', 'nextweek'],  help='Condor queue to use')
     parser.add_argument('--outDir', type=str, help='Output directory', required=True)
     parser.add_argument('--nJobs', type=int, default=1, help='Number of jobs to submit with each gridpack')
@@ -290,9 +429,24 @@ def main():
         # FIXME: Improve this function and the working of `NOdownload` flag
         # INFO: Users may need to modify the generated .sh file or the configuration file
         download_and_prepare_scripts(ChainDownloadLinkFromMccM_dict, args)
-    generate_executable_script(args.CMSSWConfigFile, args)  # FIXME: Hardcoded file name
-    generate_jdl_file(args)
-    printInfoToSubmit(args)
+    else:
+        # Before running this we need to ensure that we updated the LHE config file to include the gridpack path, nevents, and seed
+        logging.info("Skipping download and preparation of scripts.")
+
+        append_to_config_file = False
+        if append_to_config_file:
+            UpdatewmLHEConfigFile()
+        else:
+            user_input = input("Have you updated the LHE config file with the gridpack path, nevents, and seed? (y/n): ").strip().lower()
+
+            if user_input == 'yes' or user_input == 'y':
+                logging.info("Continuing with the script processing.")
+                generate_executable_script(args)  # FIXME: Hardcoded file name
+                generate_jdl_file(args)
+                printInfoToSubmit(args)
+            else:
+                logging.error("Please update the LHE config file with the gridpack path, nevents, and seed.")
+                sys.exit(1)
 
     logging.info("Script processing completed.")
 

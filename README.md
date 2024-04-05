@@ -28,3 +28,12 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 
 
 ***NOTE:*** It would be good if you first test locally the `.sh` file obtained by this script for say 50 events. This will help you to understand the workflow and also to check if the script is working properly. Once you are satisfied with the local test, you can submit the jobs to condor. You may need to copy the CMSSW config file to the local directory.
+
+
+# General Suggestations
+
+1. Commit the cmssw configuration and the .sh script downloaded from the mccm to git. This will help you to track the changes and also to reproduce the results.
+
+# Few improvements or things to note
+
+1. Directory name `ConfigFiles` is hardcoded in the script
