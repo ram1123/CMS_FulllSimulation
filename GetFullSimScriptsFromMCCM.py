@@ -394,6 +394,7 @@ def generate_jdl_file(args: argparse.Namespace):
     # Loop through the models and generate specific JDL configurations
     for gridpack in models[args.model]:
         TimeStamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        logging.debug(f"Gridpack: {gridpack}")
 
         # For the naming convention grab sample info from gridpack path
         SampleName = gridpack.split('/')[-1]
