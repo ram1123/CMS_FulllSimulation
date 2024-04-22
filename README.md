@@ -1,7 +1,7 @@
 # Setup
 
 ```bash
-git clone git@github.com:ram1123/CMS_FulllSimulation.git -b HH_bbgg
+git clone git@github.com:ram1123/CMS_FulllSimulation.git -b main
 cd CMS_FulllSimulation
 ```
 
@@ -30,27 +30,29 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 ***NOTE:*** It would be good if you first test locally the `.sh` file obtained by this script for say 50 events. This will help you to understand the workflow and also to check if the script is working properly. Once you are satisfied with the local test, you can submit the jobs to condor. You may need to copy the CMSSW config file to the local directory.
 
 
-# General Suggestations
-
-1. Commit the cmssw configuration and the .sh script downloaded from the mccm to git. This will help you to track the changes and also to reproduce the results.
-
-# Few improvements or things to note
-
-1. Directory name `ConfigFiles` is hardcoded in the script
-
+***General Suggestations:*** Commit the cmssw configuration and the .sh script downloaded from the mccm to git. This will help you to track the changes and also to reproduce the results.
 
 # How to run the script
 
 - ***Step - 1:*** Prepare the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) file. Add the chain name and the download link from McM. This file also serves as the bookkeeping file for the chain name and the download link.
+
 - ***Step - 2:*** Prepare the [gridpack_lists.py](utils/gridpack_lists.py) file. Add the list of gridpacks you want to generate.
+
 - ***Step - 3:*** Fetch the CMSSW configuration file from the McM. Run the script [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM.py) with the following command:
+
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py --UseCustomNanoAOD --model 'HHbbgg' --year '2016preVFP' --debug --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --run_exec
+    python3 GetFullSimScriptsFromMCCM.py --nevents 2000  --model HHbbgg --year 2016preVFP --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --nJobs 100 --jobName 2016preVFP --UseCustomNanoAOD --run_exec
     ```
-    Note the `model` and `year` arguments in the above command. It depends on your file information that you added in the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) and [gridpack_lists.py](utils/gridpack_lists.py) files.
+
+    Note the `model` and `year` arguments in the above command. It depends on your keys that you added in the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) and [gridpack_lists.py](utils/gridpack_lists.py) files.
 
 - ***Step - 4:*** Edit the CMSSW configuration file.
-    1. step-1 config file (wmLHE config file):
+
+    ```bash
+    python3 GetFullSimScriptsFromMCCM.py --nevents 2000  --model HHbbgg --year 2016preVFP --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --nJobs 100 --jobName 2016preVFP --UseCustomNanoAOD --NOdownload --append_to_config_file
+    ```
+
+    1. step-1 config file (wmLHE config file): ***Done by above command***
        - Here you need to add the input arguments for the additional input arguments for seed value, and gridpack file
 
             ```python
@@ -68,12 +70,14 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
                         "gridpack with path")
             options.parseArguments()
             ```
-        - Add the message logger
+
+        - Add the message logger ***Done by above command***
 
             ```python
             process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
             ```
-        - Update the number of input events to be generated. Replace line:
+
+        - Update the number of input events to be generated. Replace line: ***Do this manually, only in wmLHE file***
 
             ```python
             input = cms.untracked.int32(10000)
@@ -85,7 +89,9 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
             input = cms.untracked.int32(options.maxEvents)
             ```
 
-        - Update the gridpack path. Replace line:
+            ***Note:*** The number of events is already updated in the first step, just set the number of events to be generated to -1 in the subsequent steps.
+
+        - Update the gridpack path. Replace line:  ***Do this manually, only in wmLHE file***
 
             ```python
             annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:10000'),
@@ -97,7 +103,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
             annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:'+str(options.maxEvents),
             ```
 
-        - Update the gridpack path. Replace line:
+        - Update the gridpack path. Replace line:  ***Do this manually, only in wmLHE file***
 
             ```python
             args = cms.vstring('/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M2000/v1/Radion_hh_narrow_M2000_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz'),
@@ -109,7 +115,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
             args = cms.vstring(options.gridpack),
             ```
 
-        - Update the random seed value. Replace line:
+        - Update the number of events in the gripack generation passage. Replace line:  ***Do this manually, only in wmLHE file***
 
             ```python
             nEvents = cms.untracked.uint32(10000),
@@ -121,7 +127,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
             nEvents = cms.untracked.uint32(options.maxEvents),
             ```
 
-        - Update the random seed value. Add line:
+        - Update the random seed value. Add line: ***Done by above command***
 
             ```python
             process.RandomNumberGeneratorService.externalLHEProducer.initialSeed=options.seedval
@@ -131,4 +137,19 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
             ```python
             process = addMonitoring(process)
             ```
-    2. In other steps, you can add the message logger and update the number of input events to be generated as mentioned above. As the number of events is already updated in the first step, just set the number of events to be generated to -1 in the subsequent steps.
+
+- ***Step - 5:*** Run the script to generate the executable script and JDL file.
+
+    ```bash
+    python3 GetFullSimScriptsFromMCCM.py --nevents 2000  --model HHbbgg --year 2016preVFP --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --nJobs 100 --jobName 2016preVFP --UseCustomNanoAOD --NOdownload
+    ```
+
+- ***Step - 6:*** Submit the jobs to condor.
+
+    ```bash
+    condor_submit UL2016postVFP.jdl
+    ```
+
+# Few improvements or things to note
+
+1. Directory name `ConfigFiles` is hardcoded in the script
