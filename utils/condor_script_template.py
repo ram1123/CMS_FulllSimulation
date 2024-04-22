@@ -118,7 +118,7 @@ request_cpus = 8
 jdl_file_template_part2of2 = '''Output = {CondorLogPath}/log_$(Cluster)_$(Process).stdout
 Error  = {CondorLogPath}/log_$(Cluster)_$(Process).stderr
 Log  = {CondorLogPath}/log_$(Cluster)_$(Process).log
-Arguments = $(Cluster) $(Process) {OutputDir} {GridpackWithPath} {maxEvents}
+Arguments = $(Cluster) $(Process) {OutputDir} {GridpackWithPath} {maxEvents} {OutputFile}
 Queue {Queue}
 '''
 

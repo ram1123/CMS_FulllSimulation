@@ -321,6 +321,7 @@ echo "Input Arguments (Proc ID): $2"
 echo "Input Arguments (Output Dir): $3"
 echo "Input Arguments (Gridpack with path): $4"
 echo "Input Arguments (maxEvents): $5"
+echo "Input Arguments (output file): $6"
 echo ""
 
 # Setting up CMSSW versions and configuration files
@@ -330,7 +331,7 @@ echo ""
     for step, version in versions.items():
         config_file = config_files.get(step, "default_config.py")
         script_content += f"{step}={version}\n"
-        script_content += f"{step}_cfg={config_file}\n"
+        script_content += f"{step}_cfg={config_file.split('/')[-1]}\n"
 
     script_content += "\nseed=$(($1 + $2))\n\n"  # Seed value calculation
 
@@ -364,7 +365,7 @@ echo ""
     script_content += "echo \"Copying output nanoAOD file to output directory\"\n"
     script_content += "ls -ltrh\n"
     script_content += "echo \"cp -r HIG-RunIISummer20UL17NanoAODv9-03735.root $3/nanoAOD_$1_$2.root\"\n"    # FIXME: Hardcoded nanoAOD output file name
-    script_content += "cp -r HIG-RunIISummer20UL17NanoAODv9-03735.root $3/nanoAOD_$1_$2.root\n" # FIXME: Hardcoded nanoAOD output file name
+    script_content += "cp -r $6 $3/nanoAOD_$1_$2.root\n".format() # FIXME: Hardcoded nanoAOD output file name
     script_content += "echo \"Job finished on \" $(date)\n"
 
     return script_content
@@ -381,6 +382,8 @@ def generate_jdl_file(args: argparse.Namespace):
     with open(config_file_path, 'r') as file:
         config_data = json.load(file)[0]
     comma_separated_config_files = ', '.join(details['CMSSW_ConfigFile'] for step, details in config_data.items())
+    # OutputFile will be the "fileout" from the step "step7_NANOAOD" in the config file
+    OutputFile = (config_data['step7_NANOAOD']['fileout']).replace("file:", "")
 
     # Prepare paths and template replacements
     jdl_content = []
@@ -405,7 +408,7 @@ def generate_jdl_file(args: argparse.Namespace):
         model_log_dir = log_dir / args.model / SampleName / TimeStamp
         model_log_dir.mkdir(parents=True, exist_ok=True)
 
-        output_dir = Path(args.outDir) / args.model / SampleName / TimeStamp
+        output_dir = Path(args.outDir) / args.model / args.year / SampleName / TimeStamp
         output_dir.mkdir(parents=True, exist_ok=True)
 
         logging.debug(f"Log directory: {model_log_dir}")
@@ -416,6 +419,7 @@ def generate_jdl_file(args: argparse.Namespace):
             OutputDir=str(output_dir),
             GridpackWithPath=gridpack,
             maxEvents=args.nevents,
+            OutputFile=OutputFile,
             Queue=args.nJobs
         ))
         if args.debug:

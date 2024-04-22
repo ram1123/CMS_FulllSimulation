@@ -16,7 +16,7 @@ The script performs the following tasks:
 
 The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depends mainly on three external files. They are:
 
-1. [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) - Contains the chain name and the download link from McM.
+1. [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) - Contains the chain name and the download link from McM. This file also serves as the bookkeeping file for the chain name and the download link.
     - When you run the main script, i.e. [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM.py), it will use the information from this file and
        obtains the text file named [CMSSWConfigFile.txt](utils/CMSSWConfigFile.txt). This contains the basic infomration that will be used to
        to setup the full simulation script for the condor job. If you already have the configuration files,
@@ -37,3 +37,98 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 # Few improvements or things to note
 
 1. Directory name `ConfigFiles` is hardcoded in the script
+
+
+# How to run the script
+
+- ***Step - 1:*** Prepare the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) file. Add the chain name and the download link from McM. This file also serves as the bookkeeping file for the chain name and the download link.
+- ***Step - 2:*** Prepare the [gridpack_lists.py](utils/gridpack_lists.py) file. Add the list of gridpacks you want to generate.
+- ***Step - 3:*** Fetch the CMSSW configuration file from the McM. Run the script [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM.py) with the following command:
+    ```bash
+    python3 GetFullSimScriptsFromMCCM.py --UseCustomNanoAOD --model 'HHbbgg' --year '2016preVFP' --debug --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --run_exec
+    ```
+    Note the `model` and `year` arguments in the above command. It depends on your file information that you added in the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) and [gridpack_lists.py](utils/gridpack_lists.py) files.
+
+- ***Step - 4:*** Edit the CMSSW configuration file.
+    1. step-1 config file (wmLHE config file):
+       - Here you need to add the input arguments for the additional input arguments for seed value, and gridpack file
+
+            ```python
+            from FWCore.ParameterSet.VarParsing import VarParsing
+            options = VarParsing ('analysis')
+            options.register ('seedval',
+                        1238,
+                        VarParsing.multiplicity.singleton,
+                        VarParsing.varType.int,
+                        "random seed for event generation")
+            options.register ('gridpack',
+                        '',
+                        VarParsing.multiplicity.singleton,
+                        VarParsing.varType.string,
+                        "gridpack with path")
+            options.parseArguments()
+            ```
+        - Add the message logger
+
+            ```python
+            process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
+            ```
+        - Update the number of input events to be generated. Replace line:
+
+            ```python
+            input = cms.untracked.int32(10000)
+            ```
+
+            with
+
+            ```python
+            input = cms.untracked.int32(options.maxEvents)
+            ```
+
+        - Update the gridpack path. Replace line:
+
+            ```python
+            annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:10000'),
+            ```
+
+            with
+
+            ```python
+            annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:'+str(options.maxEvents),
+            ```
+
+        - Update the gridpack path. Replace line:
+
+            ```python
+            args = cms.vstring('/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M2000/v1/Radion_hh_narrow_M2000_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz'),
+            ```
+
+            with
+
+            ```python
+            args = cms.vstring(options.gridpack),
+            ```
+
+        - Update the random seed value. Replace line:
+
+            ```python
+            nEvents = cms.untracked.uint32(10000),
+            ```
+
+            with
+
+            ```python
+            nEvents = cms.untracked.uint32(options.maxEvents),
+            ```
+
+        - Update the random seed value. Add line:
+
+            ```python
+            process.RandomNumberGeneratorService.externalLHEProducer.initialSeed=options.seedval
+            ```
+            after line:
+
+            ```python
+            process = addMonitoring(process)
+            ```
+    2. In other steps, you can add the message logger and update the number of input events to be generated as mentioned above. As the number of events is already updated in the first step, just set the number of events to be generated to -1 in the subsequent steps.

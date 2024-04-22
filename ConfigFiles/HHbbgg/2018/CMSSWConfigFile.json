@@ -1,0 +1,53 @@
+[
+    {
+        "step1_wmLHEGEN": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step1_wmLHEGEN.sh",
+            "CMSSWVersion": "CMSSW_10_6_30_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18wmLHEGEN-03711_1_cfg.py",
+            "filein": null,
+            "fileout": "file:HIG-RunIISummer20UL18wmLHEGEN-03711.root"
+        },
+        "step2_SIM": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step2_SIM.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18SIM-03374_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL18wmLHEGEN-03711.root",
+            "fileout": "file:HIG-RunIISummer20UL18SIM-03374.root"
+        },
+        "step3_DIGI": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step3_DIGI.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18DIGIPremix-03355_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL18SIM-03374.root",
+            "fileout": "file:HIG-RunIISummer20UL18DIGIPremix-03355.root"
+        },
+        "step4_HLT": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step4_HLT.sh",
+            "CMSSWVersion": "CMSSW_10_2_16_UL",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18HLT-03374_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL18DIGIPremix-03355.root",
+            "fileout": "file:HIG-RunIISummer20UL18HLT-03374.root"
+        },
+        "step5_RECO": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step5_RECO.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18RECO-03374_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL18HLT-03374.root",
+            "fileout": "file:HIG-RunIISummer20UL18RECO-03374.root"
+        },
+        "step6_MINIAOD": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step6_MINIAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_20",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18MiniAODv2-03374_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL18RECO-03374.root",
+            "fileout": "file:HIG-RunIISummer20UL18MiniAODv2-03374.root"
+        },
+        "step7_NANOAOD": {
+            "script_name": "ConfigFiles/HHbbgg/2018/step7_NANOAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_26",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18NanoAODv9-03610_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL18MiniAODv2-03374.root",
+            "fileout": "file:HIG-RunIISummer20UL18NanoAODv9-03610.root"
+        }
+    }
+]
