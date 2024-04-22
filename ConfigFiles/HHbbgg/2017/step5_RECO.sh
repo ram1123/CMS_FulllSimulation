@@ -18,6 +18,11 @@
 voms-proxy-init --voms cms --out $(pwd)/voms_proxy.txt --hours 4
 export X509_USER_PROXY=$(pwd)/voms_proxy.txt
 
+
+# Dump actual test code to a HIG-RunIISummer20UL17RECO-03331_test.sh file that can be run in Singularity
+cat <<'EndOfTestFile' > HIG-RunIISummer20UL17RECO-03331_test.sh
+#!/bin/bash
+
 export SCRAM_ARCH=slc7_amd64_gcc700
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -50,3 +55,20 @@ EVENTS=3481
 
 # cmsDriver command
 cmsDriver.py  --python_filename HIG-RunIISummer20UL17RECO-03331_1_cfg.py --eventcontent AODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier AODSIM --fileout file:HIG-RunIISummer20UL17RECO-03331.root --conditions 106X_mc2017_realistic_v6 --step RAW2DIGI,L1Reco,RECO,RECOSIM --geometry DB:Extended --filein file:HIG-RunIISummer20UL17HLT-03331.root --era Run2_2017 --runUnscheduled --no_exec --mc -n $EVENTS || exit $? ;
+
+# End of HIG-RunIISummer20UL17RECO-03331_test.sh file
+EndOfTestFile
+
+# Make file executable
+chmod +x HIG-RunIISummer20UL17RECO-03331_test.sh
+
+if [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:amd64" ]; then
+  CONTAINER_NAME="el7:amd64"
+elif [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:x86_64" ]; then
+  CONTAINER_NAME="el7:x86_64"
+else
+  echo "Could not find amd64 or x86_64 for el7"
+  exit 1
+fi
+export SINGULARITY_CACHEDIR="/tmp/$(whoami)/singularity"
+singularity run -B /afs -B /cvmfs -B /etc/grid-security -B /etc/pki/ca-trust --no-home /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/$CONTAINER_NAME $(echo $(pwd)/HIG-RunIISummer20UL17RECO-03331_test.sh)

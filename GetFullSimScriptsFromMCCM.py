@@ -432,7 +432,7 @@ def generate_jdl_file(args: argparse.Namespace):
 
     logging.info(f"JDL file '{jdl_filename}' has been generated.")
 
-def UpdatewmLHEConfigFile():
+def UpdatewmLHEConfigFile(args: argparse.Namespace):
     """Update the wmLHEConfigFile with the gridpack path, nevents, and seed."""
     # Append the gridpack path, nevents, and seed to the LHE config file
     logging.info("Appending gridpack path, nevents, and seed to the LHE config file.")
@@ -452,7 +452,17 @@ options.register ('gridpack',
             "gridpack with path")
 options.parseArguments()
 """
-    with open(Path('ConfigFiles') / args.model / args.year / 'HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py', 'r') as file:
+    # grab CMSSWConfigFile and get the CMSSW_ConfigFile from key step1_wmLHEGEN. Then read the file obtained from CMSSWConfigFile
+    config_file_path = Path('ConfigFiles') / args.model / args.year / args.CMSSWConfigFile
+    with open(config_file_path, 'r') as file:
+        config_data = json.load(file)[0]
+        for step, details in config_data.items():
+            if step == 'step1_wmLHEGEN':
+                CMSSW_ConfigFile = details['CMSSW_ConfigFile']
+                break
+
+    logger.debug(f"CMSSW_ConfigFile: {CMSSW_ConfigFile}")
+    with open(CMSSW_ConfigFile, 'r') as file:
         data = file.readlines()
 
     insert_index = 0
@@ -463,8 +473,13 @@ options.parseArguments()
     insert_index = next((i for i, line in enumerate(data) if 'process.maxEvents ' in line), None) - 1
     data.insert(insert_index, ArgInfo)
 
-    with open(Path('ConfigFiles') / args.model / args.year / 'HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py', 'w') as file:
+    ArgInfo = f"""process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)"""
+    insert_index = next((i for i, line in enumerate(data) if 'process = addMonitoring(process)' in line), None) + 1
+    data.insert(insert_index, ArgInfo)
+
+    with open(CMSSW_ConfigFile, 'w') as file:
         file.writelines(data)
+
     logging.debug("Exitting after appending gridpack path, nevents, and seed to the LHE config file.")
 
 def parse_arguments():
@@ -481,6 +496,7 @@ def parse_arguments():
     parser.add_argument('--nJobs', type=int, default=1, help='Number of jobs to submit with each gridpack')
     parser.add_argument('--jobName', type=str, default='run_simulation_HHbbgg', help='Job name')
     parser.add_argument('--UseCustomNanoAOD', action='store_true', help='Use custom nanoAOD file for analysis')
+    parser.add_argument('--append_to_config_file', action='store_true', help='Append gridpack path, nevents, and seed to the LHE config file')
     parser.add_argument('--debug', action='store_true', help='Submit only one job for debugging')
     return parser.parse_args()
 
@@ -510,9 +526,8 @@ def main():
         # Before running this we need to ensure that we updated the LHE config file to include the gridpack path, nevents, and seed
         logging.info("Skipping download and preparation of scripts.")
 
-        append_to_config_file = False
-        if append_to_config_file:
-            UpdatewmLHEConfigFile()
+        if args.append_to_config_file:
+            UpdatewmLHEConfigFile(args)
         else:
             user_input = input("Have you updated the LHE config file with the gridpack path, nevents, and seed? (y/n): ").strip().lower()
 

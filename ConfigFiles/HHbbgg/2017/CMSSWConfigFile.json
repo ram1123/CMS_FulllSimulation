@@ -1,51 +1,51 @@
 [
     {
         "step1_wmLHEGEN": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step1_wmLHEGEN.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step1_wmLHEGEN.sh",
             "CMSSWVersion": "CMSSW_10_6_30_patch1",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py",
             "filein": null,
             "fileout": "file:HIG-RunIISummer20UL17wmLHEGEN-03707.root"
         },
         "step2_SIM": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step2_SIM.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step2_SIM.sh",
             "CMSSWVersion": "CMSSW_10_6_17_patch1",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17SIM-03331_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17SIM-03331_1_cfg.py",
             "filein": "file:HIG-RunIISummer20UL17wmLHEGEN-03707.root",
             "fileout": "file:HIG-RunIISummer20UL17SIM-03331.root"
         },
         "step3_DIGI": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step3_DIGI.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step3_DIGI.sh",
             "CMSSWVersion": "CMSSW_10_6_17_patch1",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17DIGIPremix-03331_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17DIGIPremix-03331_1_cfg.py",
             "filein": "file:HIG-RunIISummer20UL17SIM-03331.root",
             "fileout": "file:HIG-RunIISummer20UL17DIGIPremix-03331.root"
         },
         "step4_HLT": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step4_HLT.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step4_HLT.sh",
             "CMSSWVersion": "CMSSW_9_4_14_UL_patch1",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17HLT-03331_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17HLT-03331_1_cfg.py",
             "filein": "file:HIG-RunIISummer20UL17DIGIPremix-03331.root",
             "fileout": "file:HIG-RunIISummer20UL17HLT-03331.root"
         },
         "step5_RECO": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step5_RECO.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step5_RECO.sh",
             "CMSSWVersion": "CMSSW_10_6_17_patch1",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17RECO-03331_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17RECO-03331_1_cfg.py",
             "filein": "file:HIG-RunIISummer20UL17HLT-03331.root",
             "fileout": "file:HIG-RunIISummer20UL17RECO-03331.root"
         },
         "step6_MINIAOD": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step6_MINIAOD.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step6_MINIAOD.sh",
             "CMSSWVersion": "CMSSW_10_6_20",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17MiniAODv2-03331_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17MiniAODv2-03331_1_cfg.py",
             "filein": "file:HIG-RunIISummer20UL17RECO-03331.root",
             "fileout": "file:HIG-RunIISummer20UL17MiniAODv2-03331.root"
         },
         "step7_NANOAOD": {
-            "script_name": "ConfigFiles/HHTobbgg/Summer20UL17/step7_NANOAOD.sh",
+            "script_name": "ConfigFiles/HHbbgg/2017/step7_NANOAOD.sh",
             "CMSSWVersion": "CMSSW_10_6_26",
-            "CMSSW_ConfigFile": "ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2017/HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py",
             "filein": "file:HIG-RunIISummer20UL17MiniAODv2-03331.root",
             "fileout": "file:HIG-RunIISummer20UL17NanoAODv9-03735.root"
         }

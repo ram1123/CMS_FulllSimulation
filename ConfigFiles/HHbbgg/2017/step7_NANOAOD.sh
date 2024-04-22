@@ -18,19 +18,23 @@
 voms-proxy-init --voms cms --out $(pwd)/voms_proxy.txt --hours 4
 export X509_USER_PROXY=$(pwd)/voms_proxy.txt
 
+
+# Dump actual test code to a HIG-RunIISummer20UL17NanoAODv9-03735_test.sh file that can be run in Singularity
+cat <<'EndOfTestFile' > HIG-RunIISummer20UL17NanoAODv9-03735_test.sh
+#!/bin/bash
+
 export SCRAM_ARCH=slc7_amd64_gcc700
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-if [ -r CMSSW_10_6_30/src ] ; then
-  echo release CMSSW_10_6_30 already exists
+if [ -r CMSSW_10_6_26/src ] ; then
+  echo release CMSSW_10_6_26 already exists
 else
-  scram p CMSSW CMSSW_10_6_30
+  scram p CMSSW CMSSW_10_6_26
 fi
-cd CMSSW_10_6_30/src
+cd CMSSW_10_6_26/src
 eval `scram runtime -sh`
-# cp -r ../../Configuration .
-git cms-merge-topic -u ram1123:CMSSW_10_6_30_HHWWgg_nanoV9
-./PhysicsTools/NanoTuples/scripts/install_onnxruntime.sh
+
+cp -r ../../Configuration .
 scram b
 cd ../..
 
@@ -50,4 +54,21 @@ EVENTS=10000
 
 
 # cmsDriver command
-cmsDriver.py  --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM  --customise PhysicsTools/NanoTuples/nanoTuples_cff.nanoTuples_customizeMC --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root  --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n $EVENTS || exit $? ;
+cmsDriver.py  --python_filename HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py --eventcontent NANOAODSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier NANOAODSIM --fileout file:HIG-RunIISummer20UL17NanoAODv9-03735.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:HIG-RunIISummer20UL17MiniAODv2-03331.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n $EVENTS || exit $? ;
+
+# End of HIG-RunIISummer20UL17NanoAODv9-03735_test.sh file
+EndOfTestFile
+
+# Make file executable
+chmod +x HIG-RunIISummer20UL17NanoAODv9-03735_test.sh
+
+if [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:amd64" ]; then
+  CONTAINER_NAME="el7:amd64"
+elif [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:x86_64" ]; then
+  CONTAINER_NAME="el7:x86_64"
+else
+  echo "Could not find amd64 or x86_64 for el7"
+  exit 1
+fi
+export SINGULARITY_CACHEDIR="/tmp/$(whoami)/singularity"
+singularity run -B /afs -B /cvmfs -B /etc/grid-security -B /etc/pki/ca-trust --no-home /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/$CONTAINER_NAME $(echo $(pwd)/HIG-RunIISummer20UL17NanoAODv9-03735_test.sh)

@@ -1,0 +1,53 @@
+[
+    {
+        "step1_wmLHEGEN": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step1_wmLHEGEN.sh",
+            "CMSSWVersion": "CMSSW_10_6_30_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16wmLHEGENAPV-03448_1_cfg.py",
+            "filein": null,
+            "fileout": "file:HIG-RunIISummer20UL16wmLHEGENAPV-03448.root"
+        },
+        "step2_SIM": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step2_SIM.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16SIMAPV-03078_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL16wmLHEGENAPV-03448.root",
+            "fileout": "file:HIG-RunIISummer20UL16SIMAPV-03078.root"
+        },
+        "step3_DIGI": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step3_DIGI.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16DIGIPremixAPV-03057_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL16SIMAPV-03078.root",
+            "fileout": "file:HIG-RunIISummer20UL16DIGIPremixAPV-03057.root"
+        },
+        "step4_HLT": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step4_HLT.sh",
+            "CMSSWVersion": "CMSSW_8_0_36_UL_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16HLTAPV-03078_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL16DIGIPremixAPV-03057.root",
+            "fileout": "file:HIG-RunIISummer20UL16HLTAPV-03078.root"
+        },
+        "step5_RECO": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step5_RECO.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16RECOAPV-03078_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL16HLTAPV-03078.root",
+            "fileout": "file:HIG-RunIISummer20UL16RECOAPV-03078.root"
+        },
+        "step6_MINIAOD": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step6_MINIAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_25",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16MiniAODAPVv2-02774_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL16RECOAPV-03078.root",
+            "fileout": "file:HIG-RunIISummer20UL16MiniAODAPVv2-02774.root"
+        },
+        "step7_NANOAOD": {
+            "script_name": "ConfigFiles/HHbbgg/2016preVFP/step7_NANOAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_26",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2016preVFP/HIG-RunIISummer20UL16NanoAODAPVv9-03636_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL16MiniAODAPVv2-02774.root",
+            "fileout": "file:HIG-RunIISummer20UL16NanoAODAPVv9-03636.root"
+        }
+    }
+]

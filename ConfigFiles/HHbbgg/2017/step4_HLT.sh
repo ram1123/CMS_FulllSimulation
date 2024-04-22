@@ -11,11 +11,17 @@
 # say "Get test command" when you hover your mouse over it  #
 #      If you try to run this, you will have a bad time     #
 #############################################################
+
 #cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17HLT-03331/
 
 # Make voms proxy
 voms-proxy-init --voms cms --out $(pwd)/voms_proxy.txt --hours 4
 export X509_USER_PROXY=$(pwd)/voms_proxy.txt
+
+
+# Dump actual test code to a HIG-RunIISummer20UL17HLT-03331_test.sh file that can be run in Singularity
+cat <<'EndOfTestFile' > HIG-RunIISummer20UL17HLT-03331_test.sh
+#!/bin/bash
 
 export SCRAM_ARCH=slc7_amd64_gcc630
 
@@ -49,3 +55,20 @@ EVENTS=2409
 
 # cmsDriver command
 cmsDriver.py  --python_filename HIG-RunIISummer20UL17HLT-03331_1_cfg.py --eventcontent RAWSIM --customise Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM-RAW --fileout file:HIG-RunIISummer20UL17HLT-03331.root --conditions 94X_mc2017_realistic_v15 --customise_commands 'process.source.bypassVersionCheck = cms.untracked.bool(True)' --step HLT:2e34v40 --geometry DB:Extended --filein file:HIG-RunIISummer20UL17DIGIPremix-03331.root --era Run2_2017 --no_exec --mc -n $EVENTS || exit $? ;
+
+# End of HIG-RunIISummer20UL17HLT-03331_test.sh file
+EndOfTestFile
+
+# Make file executable
+chmod +x HIG-RunIISummer20UL17HLT-03331_test.sh
+
+if [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:amd64" ]; then
+  CONTAINER_NAME="el7:amd64"
+elif [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:x86_64" ]; then
+  CONTAINER_NAME="el7:x86_64"
+else
+  echo "Could not find amd64 or x86_64 for el7"
+  exit 1
+fi
+export SINGULARITY_CACHEDIR="/tmp/$(whoami)/singularity"
+singularity run -B /afs -B /cvmfs -B /etc/grid-security -B /etc/pki/ca-trust --no-home /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/$CONTAINER_NAME $(echo $(pwd)/HIG-RunIISummer20UL17HLT-03331_test.sh)

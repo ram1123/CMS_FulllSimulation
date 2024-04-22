@@ -12,7 +12,7 @@
 #      If you try to run this, you will have a bad time     #
 #############################################################
 
-# cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17wmLHEGEN-03707/
+#cd /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/HIG-RunIISummer20UL17wmLHEGEN-03707/
 
 # Make voms proxy
 voms-proxy-init --voms cms --out $(pwd)/voms_proxy.txt --hours 4
@@ -21,6 +21,11 @@ export X509_USER_PROXY=$(pwd)/voms_proxy.txt
 # Download fragment from McM
 curl -s -k https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_fragment/HIG-RunIISummer20UL17wmLHEGEN-03707 --retry 3 --create-dirs -o Configuration/GenProduction/python/HIG-RunIISummer20UL17wmLHEGEN-03707-fragment.py
 [ -s Configuration/GenProduction/python/HIG-RunIISummer20UL17wmLHEGEN-03707-fragment.py ] || exit $?;
+
+# Dump actual test code to a HIG-RunIISummer20UL17wmLHEGEN-03707_test.sh file that can be run in Singularity
+cat <<'EndOfTestFile' > HIG-RunIISummer20UL17wmLHEGEN-03707_test.sh
+#!/bin/bash
+
 export SCRAM_ARCH=slc7_amd64_gcc700
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -53,3 +58,20 @@ EVENTS=10000
 
 # cmsDriver command
 cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer20UL17wmLHEGEN-03707-fragment.py --python_filename HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py --eventcontent RAWSIM,LHE --customise Configuration/DataProcessing/Utils.addMonitoring --datatier GEN,LHE --fileout file:HIG-RunIISummer20UL17wmLHEGEN-03707.root --conditions 106X_mc2017_realistic_v6 --beamspot Realistic25ns13TeVEarly2017Collision --step LHE,GEN --geometry DB:Extended --era Run2_2017 --no_exec --mc -n $EVENTS || exit $? ;
+
+# End of HIG-RunIISummer20UL17wmLHEGEN-03707_test.sh file
+EndOfTestFile
+
+# Make file executable
+chmod +x HIG-RunIISummer20UL17wmLHEGEN-03707_test.sh
+
+if [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:amd64" ]; then
+  CONTAINER_NAME="el7:amd64"
+elif [ -e "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:x86_64" ]; then
+  CONTAINER_NAME="el7:x86_64"
+else
+  echo "Could not find amd64 or x86_64 for el7"
+  exit 1
+fi
+export SINGULARITY_CACHEDIR="/tmp/$(whoami)/singularity"
+singularity run -B /afs -B /cvmfs -B /etc/grid-security -B /etc/pki/ca-trust --no-home /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/$CONTAINER_NAME $(echo $(pwd)/HIG-RunIISummer20UL17wmLHEGEN-03707_test.sh)
