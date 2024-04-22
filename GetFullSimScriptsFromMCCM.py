@@ -437,6 +437,34 @@ def UpdatewmLHEConfigFile(args: argparse.Namespace):
     # Append the gridpack path, nevents, and seed to the LHE config file
     logging.info("Appending gridpack path, nevents, and seed to the LHE config file.")
 
+    # grab CMSSWConfigFile and get the CMSSW_ConfigFile from key step1_wmLHEGEN. Then read the file obtained from CMSSWConfigFile
+    config_file_path = Path('ConfigFiles') / args.model / args.year / args.CMSSWConfigFile
+    with open(config_file_path, 'r') as file:
+        config_data = json.load(file)[0]
+
+    # Add  ArgInfo = """process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"""
+    # To each CMSSW_ConfigFile files
+    for step, details in config_data.items():
+        CMSSW_ConfigFile = details['CMSSW_ConfigFile']
+        with open(CMSSW_ConfigFile, 'r') as file:
+            data = file.readlines()
+
+        ArgInfo = """process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"""
+        insert_index = next((i for i, line in enumerate(data) if 'process.maxEvents ' in line), None) - 1
+        data.insert(insert_index, ArgInfo)
+
+        with open(CMSSW_ConfigFile, 'w') as file:
+            file.writelines(data)
+
+    for step, details in config_data.items():
+        if step == 'step1_wmLHEGEN':
+            CMSSW_ConfigFile = details['CMSSW_ConfigFile']
+            break
+
+    logger.debug(f"CMSSW_ConfigFile: {CMSSW_ConfigFile}")
+    with open(CMSSW_ConfigFile, 'r') as file:
+        data = file.readlines()
+
     ArgInfo = """
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
@@ -452,25 +480,9 @@ options.register ('gridpack',
             "gridpack with path")
 options.parseArguments()
 """
-    # grab CMSSWConfigFile and get the CMSSW_ConfigFile from key step1_wmLHEGEN. Then read the file obtained from CMSSWConfigFile
-    config_file_path = Path('ConfigFiles') / args.model / args.year / args.CMSSWConfigFile
-    with open(config_file_path, 'r') as file:
-        config_data = json.load(file)[0]
-        for step, details in config_data.items():
-            if step == 'step1_wmLHEGEN':
-                CMSSW_ConfigFile = details['CMSSW_ConfigFile']
-                break
-
-    logger.debug(f"CMSSW_ConfigFile: {CMSSW_ConfigFile}")
-    with open(CMSSW_ConfigFile, 'r') as file:
-        data = file.readlines()
 
     insert_index = 0
     insert_index = next((i for i, line in enumerate(data) if 'from Configuration.Eras' in line), None) + 1
-    data.insert(insert_index, ArgInfo)
-
-    ArgInfo = """process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"""
-    insert_index = next((i for i, line in enumerate(data) if 'process.maxEvents ' in line), None) - 1
     data.insert(insert_index, ArgInfo)
 
     ArgInfo = f"""process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)"""
@@ -479,6 +491,7 @@ options.parseArguments()
 
     with open(CMSSW_ConfigFile, 'w') as file:
         file.writelines(data)
+
 
     logging.debug("Exitting after appending gridpack path, nevents, and seed to the LHE config file.")
 

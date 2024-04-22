@@ -23,7 +23,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(2409)
+    input = cms.untracked.int32(-1)
 )
 
 # Input source
