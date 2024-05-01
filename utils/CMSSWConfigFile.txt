@@ -1,0 +1,7 @@
+step1_wmLHEGEN.sh,CMSSW_10_6_30_patch1,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17wmLHEGEN-03707_1_cfg.py
+step2_SIM.sh,CMSSW_10_6_17_patch1,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17SIM-03331_1_cfg.py
+step3_DIGI.sh,CMSSW_10_6_17_patch1,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17DIGIPremix-03331_1_cfg.py
+step4_HLT.sh,CMSSW_9_4_14_UL_patch1,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17HLT-03331_1_cfg.py
+step5_RECO.sh,CMSSW_10_6_17_patch1,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17RECO-03331_1_cfg.py
+step6_MINIAOD.sh,CMSSW_10_6_20,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17MiniAODv2-03331_1_cfg.py
+step7_NANOAOD.sh,CMSSW_10_6_26,ConfigFiles/HHTobbgg/Summer20UL17/HIG-RunIISummer20UL17NanoAODv9-03735_1_cfg.py

@@ -1,0 +1,41 @@
+Executable = RunAllSteps.sh
+Universe = vanilla
+Notification = ERROR
+Should_Transfer_Files = YES
+Transfer_Output_Files = ""
+Transfer_Input_Files = RunAllSteps.sh, UL2018_ConfigFiles/step_1_cfg.py, UL2018_ConfigFiles/step_2_cfg.py, UL2018_ConfigFiles/step_3_cfg.py, UL2018_ConfigFiles/step_4_cfg.py, UL2018_ConfigFiles/step_5_cfg.py, UL2018_ConfigFiles/step_6_cfg.py, UL2018_ConfigFiles/step_7_cfg.py
+x509userproxy = $ENV(X509_USER_PROXY)
+getenv      = True
++JobFlavour = "testmatch"
+request_memory = 12000
+request_cpus = 8
+Output = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-150to600/log_$(Cluster)_$(Process).stdout
+Error  = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-150to600/log_$(Cluster)_$(Process).stdout
+Log  = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-150to600/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)   /eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples//WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-150to600 /eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-150to600_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz
+Queue 1000
+Output = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800/log_$(Cluster)_$(Process).stdout
+Error  = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800/log_$(Cluster)_$(Process).stdout
+Log  = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)   /eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples//WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800 /eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-600to800_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz
+Queue 1000
+Output = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-800toInf/log_$(Cluster)_$(Process).stdout
+Error  = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-800toInf/log_$(Cluster)_$(Process).stdout
+Log  = log_15Feb_cpBugFix/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-800toInf/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)   /eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples//WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-800toInf /eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WmWpToLmNujj_01j_aTGC_pTW-150toInf_mWV-800toInf_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz
+Queue 1000
+Output = log_15Feb_cpBugFix/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-150to600/log_$(Cluster)_$(Process).stdout
+Error  = log_15Feb_cpBugFix/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-150to600/log_$(Cluster)_$(Process).stdout
+Log  = log_15Feb_cpBugFix/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-150to600/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)   /eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples//WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-150to600 /eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-150to600_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz
+Queue 1000
+Output = log_15Feb_cpBugFix/WmWpToLpNujj_01j_aTGC_pTW-150toInf_mWV-600to800/log_$(Cluster)_$(Process).stdout
+Error  = log_15Feb_cpBugFix/WmWpToLpNujj_01j_aTGC_pTW-150toInf_mWV-600to800/log_$(Cluster)_$(Process).stdout
+Log  = log_15Feb_cpBugFix/WmWpToLpNujj_01j_aTGC_pTW-150toInf_mWV-600to800/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)   /eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples//WmWpToLpNujj_01j_aTGC_pTW-150toInf_mWV-600to800 /eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WmWpToLpNujj_01j_aTGC_pTW-150toInf_mWV-600to800_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz
+Queue 1000
+Output = log_15Feb_cpBugFix/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-800toInf/log_$(Cluster)_$(Process).stdout
+Error  = log_15Feb_cpBugFix/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-800toInf/log_$(Cluster)_$(Process).stdout
+Log  = log_15Feb_cpBugFix/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-800toInf/log_$(Cluster)_$(Process).stdout
+Arguments = $(Cluster) $(Process)   /eos/user/r/rasharma/post_doc_ihep/aTGC/nanoAODnTuples/aTGC_SignalSamples//WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-800toInf /eos/cms/store/group/phys_smp/anmehta/WVsemilep/V2/WpWmToLpNujj_01j_aTGC_pTW-150toInf_mWV-800toInf_4f_NLO_FXFX_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz
+Queue 1000
