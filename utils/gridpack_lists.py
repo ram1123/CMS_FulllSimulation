@@ -18,7 +18,7 @@ models = {
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M800/v1/Radion_hh_narrow_M800_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M850/v1/Radion_hh_narrow_M850_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M900/v1/Radion_hh_narrow_M900_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
-                '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M1000/v1/Radion_hh_narrow_M1000_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
+                # '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M1000/v1/Radion_hh_narrow_M1000_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
                 # '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M1100/v1/Radion_hh_narrow_M1100_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
 
                 # '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M1200/v1/Radion_hh_narrow_M1200_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',

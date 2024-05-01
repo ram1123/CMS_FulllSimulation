@@ -187,16 +187,20 @@ def update_filein_in_script(script_path, new_filein):
 
 def parse_script_for_config(script_name: str, config_file_path: str, filein_name: str, fileout_name: str):
     """Extract CMSSW version and config file information from a script."""
-    CMSSWVersion, CMSSW_ConfigFile = None, None
+    CMSSWVersion, CMSSW_ConfigFile, SCRAM_ARCH = None, None, None
     with open(script_name, 'r') as file:
         for line in file:
             if 'CMSSW' in line and '-r' in line:
                 CMSSWVersion = line.split('-r')[1].split('/')[0].strip()
             if '--python_filename' in line:
                 CMSSW_ConfigFile = line.split('--python_filename')[1].split()[0].strip()
+            if 'SCRAM_ARCH' in line:
+                SCRAM_ARCH = line.split('=')[1].strip()
+                logging.info(f"SCRAM_ARCH: {SCRAM_ARCH}")
 
     if CMSSWVersion and CMSSW_ConfigFile:
         details = {
+            'scram_arch': SCRAM_ARCH,
             'script_name': str(script_name),
             'CMSSWVersion': CMSSWVersion,
             'CMSSW_ConfigFile': str( script_name.parent / CMSSW_ConfigFile ),
@@ -273,6 +277,7 @@ def generate_executable_script(args: argparse.Namespace):
 
     cmssw_versions = {}
     cmssw_config_files = {}
+    scram_arch = {}
 
     with open(config_file_path, 'r') as file:
         config_data = json.load(file)[0]
@@ -286,6 +291,7 @@ def generate_executable_script(args: argparse.Namespace):
         script_name = details['script_name']
         CMSSWVersion = details['CMSSWVersion']
         CMSSW_ConfigFile = details['CMSSW_ConfigFile']
+        CMSSW_ScramArch = details["scram_arch"]
 
         # Conditionally update the CMSSW version if the argument is set
         if args.UseCustomNanoAOD and CMSSWVersion == 'CMSSW_10_6_26':
@@ -296,12 +302,13 @@ def generate_executable_script(args: argparse.Namespace):
 
         cmssw_versions[f"step{step_number}"] = CMSSWVersion
         cmssw_config_files[f"step{step_number}"] = CMSSW_ConfigFile
+        scram_arch[f"step{step_number}"] = CMSSW_ScramArch
 
-    script_content = build_bash_script(cmssw_versions, cmssw_config_files, args)
+    script_content = build_bash_script(cmssw_versions, cmssw_config_files, scram_arch, args)
     with open(args.jobName + '.sh', 'w') as f:
         f.write(script_content)
 
-def build_bash_script(versions: dict, config_files: dict, args: argparse.Namespace) -> str:
+def build_bash_script(versions: dict, config_files: dict, scramArch: dict, args: argparse.Namespace) -> str:
     """
     Constructs the bash script content based on the provided CMSSW versions and configuration files.
     """
@@ -329,9 +336,11 @@ echo ""
 
     # Adding CMSSW version and config file information
     for step, version in versions.items():
+        logger.debug(f"Step: {step}, Version: {version}")
         config_file = config_files.get(step, "default_config.py")
         script_content += f"{step}={version}\n"
         script_content += f"{step}_cfg={config_file.split('/')[-1]}\n"
+        # script_content += f"{step}_scramArch={scramArch[step]}\n"
 
     script_content += "\nseed=$(($1 + $2))\n\n"  # Seed value calculation
 
@@ -340,11 +349,18 @@ echo ""
         step = f"step{i}"
         script_content += 'echo "###################################################"\n'
         script_content += f"echo \"Running {step}...\"\n"
+        script_content += f"export SCRAM_ARCH={scramArch[step]}\n"
         script_content += f"if [ -r ${{{step}}}/src ] ; then\n"
         script_content += f"    echo release ${{{step}}} already exists\n"
+        script_content += f"    echo deleting release ${{{step}}}\n"
+        script_content += f"    rm -rf ${{{step}}}\n"
+        script_content += f"    scram p CMSSW ${{{step}}}\n"
         script_content += f"else\n"
         script_content += f"    scram p CMSSW ${{{step}}}\n"
         script_content += f"fi\n"
+        script_content += f"echo list files inside ${{{step}}}\n"
+        script_content += f"ls ${{{step}}}\n"
+        script_content += f'echo "--------"\n'
         script_content += f"cd ${{{step}}}/src\n"
         script_content += f"eval `scram runtime -sh`\n"
         if args.UseCustomNanoAOD and step == 'step7': # FIXME: This is a temporary fix
@@ -405,7 +421,7 @@ def generate_jdl_file(args: argparse.Namespace):
             # Update the SampleName using the replacement dict
             SampleName = SampleName.replace(key, value)
 
-        model_log_dir = log_dir / args.model / SampleName / TimeStamp
+        model_log_dir = log_dir / args.model / args.year / SampleName / TimeStamp
         model_log_dir.mkdir(parents=True, exist_ok=True)
 
         output_dir = Path(args.outDir) / args.model / args.year / SampleName / TimeStamp
