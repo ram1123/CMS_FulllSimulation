@@ -1,3 +1,4 @@
+*.sh
 step*.py
 step*.sh
 CMSSW_*/
