@@ -1,6 +1,7 @@
 [
     {
         "step1_wmLHEGEN": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step1_wmLHEGEN.sh",
             "CMSSWVersion": "CMSSW_10_6_30_patch1",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18wmLHEGEN-03711_1_cfg.py",
@@ -8,6 +9,7 @@
             "fileout": "file:HIG-RunIISummer20UL18wmLHEGEN-03711.root"
         },
         "step2_SIM": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step2_SIM.sh",
             "CMSSWVersion": "CMSSW_10_6_17_patch1",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18SIM-03374_1_cfg.py",
@@ -15,6 +17,7 @@
             "fileout": "file:HIG-RunIISummer20UL18SIM-03374.root"
         },
         "step3_DIGI": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step3_DIGI.sh",
             "CMSSWVersion": "CMSSW_10_6_17_patch1",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18DIGIPremix-03355_1_cfg.py",
@@ -22,6 +25,7 @@
             "fileout": "file:HIG-RunIISummer20UL18DIGIPremix-03355.root"
         },
         "step4_HLT": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step4_HLT.sh",
             "CMSSWVersion": "CMSSW_10_2_16_UL",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18HLT-03374_1_cfg.py",
@@ -29,6 +33,7 @@
             "fileout": "file:HIG-RunIISummer20UL18HLT-03374.root"
         },
         "step5_RECO": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step5_RECO.sh",
             "CMSSWVersion": "CMSSW_10_6_17_patch1",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18RECO-03374_1_cfg.py",
@@ -36,6 +41,7 @@
             "fileout": "file:HIG-RunIISummer20UL18RECO-03374.root"
         },
         "step6_MINIAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step6_MINIAOD.sh",
             "CMSSWVersion": "CMSSW_10_6_20",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18MiniAODv2-03374_1_cfg.py",
@@ -43,6 +49,7 @@
             "fileout": "file:HIG-RunIISummer20UL18MiniAODv2-03374.root"
         },
         "step7_NANOAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/HHbbgg/2018/step7_NANOAOD.sh",
             "CMSSWVersion": "CMSSW_10_6_26",
             "CMSSW_ConfigFile": "ConfigFiles/HHbbgg/2018/HIG-RunIISummer20UL18NanoAODv9-03610_1_cfg.py",

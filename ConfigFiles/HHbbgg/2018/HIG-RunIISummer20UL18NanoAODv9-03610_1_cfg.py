@@ -78,13 +78,19 @@ associatePatAlgosToolsTask(process)
 # Automatic addition of the customisation function from PhysicsTools.NanoAOD.nano_cff
 from PhysicsTools.NanoAOD.nano_cff import nanoAOD_customizeMC
 
-#call to customisation function nanoAOD_customizeMC imported from PhysicsTools.NanoAOD.nano_cff
+# call to customisation function nanoAOD_customizeMC imported from PhysicsTools.NanoAOD.nano_cff
 process = nanoAOD_customizeMC(process)
+
+# Automatic addition of the customisation function from PhysicsTools.NanoTuples.nanoTuples_cff
+from PhysicsTools.NanoTuples.nanoTuples_cff import nanoTuples_customizeMC
+
+# call to customisation function nanoTuples_customizeMC imported from PhysicsTools.NanoTuples.nanoTuples_cff
+process = nanoTuples_customizeMC(process)
 
 # Automatic addition of the customisation function from Configuration.DataProcessing.Utils
 from Configuration.DataProcessing.Utils import addMonitoring
 
-#call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
+# call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
 
 # End of customisation functions
