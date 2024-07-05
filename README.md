@@ -41,7 +41,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 - ***Step - 3:*** Fetch the CMSSW configuration file from the McM. Run the script [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM.py) with the following command:
 
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py --nevents 2000  --model HHbbgg --year 2016preVFP --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --nJobs 100 --jobName 2016preVFP --UseCustomNanoAOD --run_exec
+    python3 GetFullSimScriptsFromMCCM.py   --model HHbbgg --year 2016preVFP --run_exec
     ```
 
     Note the `model` and `year` arguments in the above command. It depends on your keys that you added in the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) and [gridpack_lists.py](utils/gridpack_lists.py) files.
@@ -49,7 +49,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 - ***Step - 4:*** Edit the CMSSW configuration file.
 
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py --nevents 2000  --model HHbbgg --year 2016preVFP --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --nJobs 100 --jobName 2016preVFP --UseCustomNanoAOD --NOdownload --append_to_config_file
+    python3 GetFullSimScriptsFromMCCM.py   --model HHbbgg --year 2016preVFP  --NOdownload --append_to_config_file
     ```
 
     1. step-1 config file (wmLHE config file): ***Done by above command***
@@ -91,7 +91,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 
             ***Note:*** The number of events is already updated in the first step, just set the number of events to be generated to -1 in the subsequent steps.
 
-        - Update the gridpack path. Replace line:  ***Do this manually, only in wmLHE file***
+        - Update the number of events in the fragment line. Replace line:  ***Do this manually, only in wmLHE file***
 
             ```python
             annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:10000'),
@@ -100,7 +100,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
             with
 
             ```python
-            annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:'+str(options.maxEvents),
+            annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:'+str(options.maxEvents)),
             ```
 
         - Update the gridpack path. Replace line:  ***Do this manually, only in wmLHE file***
@@ -141,7 +141,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 - ***Step - 5:*** Run the script to generate the executable script and JDL file.
 
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py --nevents 2000  --model HHbbgg --year 2016preVFP --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --nJobs 100 --jobName 2016preVFP --UseCustomNanoAOD --NOdownload
+    python3 GetFullSimScriptsFromMCCM.py --model HHbbgg --year 2016preVFP --NOdownload --nevents 2000 --nJobs 100 --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --jobName 2016preVFP --UseCustomNanoAOD
     ```
 
 - ***Step - 6:*** Submit the jobs to condor.
