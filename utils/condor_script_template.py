@@ -112,9 +112,14 @@ getenv      = True
 +JobFlavour = "{CondorQueue}"
 request_memory = 12000
 request_cpus = 8
+Output = $(CondorLogPath)/log_$(Cluster)_$(Process).stdout
+Error = $(CondorLogPath)/log_$(Cluster)_$(Process).err
+Log = $(CondorLogPath)/log_$(Cluster)_$(Process).log
+Arguments = "$(Cluster) $(Process) $(OutputDir) $(GridpackWithPath) $(maxEvents) $(OutputFile)"
+queue  {nQueue} OutputDir, GridpackWithPath, maxEvents, OutputFile, CondorLogPath from {condor_file_name}.txt
 '''
 
-
+# Not in use now but keeping it for future reference
 jdl_file_template_part2of2 = '''Output = {CondorLogPath}/log_$(Cluster)_$(Process).stdout
 Error  = {CondorLogPath}/log_$(Cluster)_$(Process).stderr
 Log  = {CondorLogPath}/log_$(Cluster)_$(Process).log
