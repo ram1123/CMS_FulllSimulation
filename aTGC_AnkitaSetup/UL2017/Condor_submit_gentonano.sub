@@ -9,8 +9,7 @@ Output      = logs/log_$(Cluster)_$(Process).stdout
 Error       = logs/log_$(Cluster)_$(Process).stdout
 Log         = logs/log_$(Cluster)_$(Process).log
 MY.SingularityImage = "/cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/cms-cat/cmssw-lxplus/cmssw-el7-lxplus:latest/"
-
 Arguments   =  $(ClusterId) $(ProcId) WpWmToLpNujj_01j_LO_SMEFT_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz  /eos/user/r/rasharma/post_doc_ihep//aTGC/SMEFT_samples/2017/WWToLNujj_01j_SMEFT_LO
-Queue 5000
+Queue 1000
 Arguments   =  $(ClusterId) $(ProcId) WZToLNujj_01j_LO_SMEFT_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz  /eos/user/r/rasharma/post_doc_ihep//aTGC/SMEFT_samples/2017/WZToLNujj_01j_SMEFT_LO
-Queue 5000
+Queue 1000
