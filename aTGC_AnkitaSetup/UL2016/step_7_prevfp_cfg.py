@@ -23,7 +23,6 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load("PhysicsTools.NanoAOD.genWeightsTable_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(-1)

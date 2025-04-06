@@ -14,7 +14,7 @@ echo "Input Arguments (Output Dir): $4"
 
 echo "i am here ${PWD}"
 
-seed=$(($1 + ${2} + 3992))
+seed=$(($1 + ${2} + 1498))
 #seed=123
 basePath=${PWD}
 step1=CMSSW_10_6_28_patch1
@@ -57,7 +57,7 @@ do
         echo "step - ${i}7"
 	cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/PhysicsTools .
 	#cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/initrwgt_aQGC16.header .
-	cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/initrwgt_aQGC16_smeft.header  initrwgt_aQGC16.header   #for smeft samples
+	cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/${5}  initrwgt_aQGC16.header   #for smeft samples
     else
         echo "step - ${i} "
     fi

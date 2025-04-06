@@ -130,13 +130,14 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
         - Update the random seed value. Add line: ***Done by above command***
 
             ```python
-            process.RandomNumberGeneratorService.externalLHEProducer.initialSeed=options.seedval
+            process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)
             ```
             after line:
 
             ```python
             process = addMonitoring(process)
             ```
+    2. step-2 : Update all other config files: Update manually the number of events to "-1" in all the config files.
 
 - ***Step - 5:*** Run the script to generate the executable script and JDL file.
 

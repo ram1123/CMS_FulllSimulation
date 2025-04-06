@@ -92,7 +92,7 @@ process.generator = cms.EDFilter("Pythia8ConcurrentHadronizerFilter",
             'pythia8CP5Settings',
             'pythia8aMCatNLOSettings',
             'pythia8PSweightsSettings',
-            #'processParameters'
+            'processParameters'
         ),
         pythia8CP5Settings = cms.vstring(
             'Tune:pp 14',
@@ -117,6 +117,21 @@ process.generator = cms.EDFilter("Pythia8ConcurrentHadronizerFilter",
             'SigmaTotal:sigmaTot = 100.309',
             'PDF:pSet=LHAPDF6:NNPDF31_nnlo_as_0118'
         ),
+        processParameters = cms.vstring(
+            'JetMatching:setMad = off',
+            'JetMatching:scheme = 1',
+            'JetMatching:merge = on',
+            'JetMatching:jetAlgorithm = 2',
+            'JetMatching:etaJetMax = 5.',
+            'JetMatching:coneRadius = 1.',
+            'JetMatching:slowJetPower = 1',
+            'JetMatching:qCut = 19.', #this is the actual merging scale
+            'JetMatching:nQmatch = 4', #4 corresponds to 4-flavour scheme (no matching of b-quarks), 5 for 5-flavour scheme
+            'JetMatching:nJetMax = 4', #number of partons in born matrix element for highest multiplicity
+            'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
+            'TimeShower:mMaxGamma = 4.0',
+        ),
+
         pythia8CommonSettings = cms.vstring(
             'Tune:preferLHAPDF = 2',
             'Main:timesAllowErrors = 10000',
@@ -161,7 +176,7 @@ process.generator = cms.EDFilter("Pythia8ConcurrentHadronizerFilter",
 
 
 process.externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
-    args = cms.vstring('/eos/cms/store/group/phys_smp/anmehta/WVsemilep/gridpacks_SMEFTLO_Nov2024_Giacomo/GRIDPACK'),
+    args = cms.vstring('/eos/cms/store/group/phys_smp/anmehta/WVsemilep/gridpacks_March2025_noMS/GRIDPACK'),
     generateConcurrently = cms.untracked.bool(True),
     nEvents = cms.untracked.uint32(2000),
     numberOfParameters = cms.uint32(1),
