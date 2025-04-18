@@ -175,8 +175,7 @@ process.generator = cms.EDFilter("Pythia8ConcurrentHadronizerFilter",
 
 
 process.externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
-    # args = cms.vstring('/eos/cms/store/group/phys_smp/anmehta/WVsemilep/gridpacks_sep2023/GRIDPACK'),
-    args = cms.vstring('/eos/cms/store/group/phys_smp/anmehta/WVsemilep/gridpacks_SMEFTLO_Nov2024_Giacomo/GRIDPACK'),
+    args = cms.vstring('/eos/cms/store/group/phys_smp/anmehta/WVsemilep/gridpacks_sep2023/GRIDPACK'),
     generateConcurrently = cms.untracked.bool(True),
     nEvents = cms.untracked.uint32(2000),
     numberOfParameters = cms.uint32(1),

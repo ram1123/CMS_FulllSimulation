@@ -1,7 +1,4 @@
 #!/bin/bash
-# Stop execution on any error
-#set -e
-
 echo "Job started..."
 echo "Starting job on " `date`
 echo "Running on: `uname -a`"
@@ -63,7 +60,7 @@ do
         echo "step - ${i}7"
 	cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/PhysicsTools .
 	#cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/initrwgt_aQGC16.header .  # for aTGC samples
-	cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/initrwgt_aQGC16_smeft.header  initrwgt_aQGC16.header   #for smeft samples
+	cp -r /afs/cern.ch/user/a/anmehta/public/osWW_vbs_fullsim/test_nanowts/UL2018/${5}  initrwgt_aQGC16.header   #for smeft samples
     else
         echo "step - ${i} "
     fi

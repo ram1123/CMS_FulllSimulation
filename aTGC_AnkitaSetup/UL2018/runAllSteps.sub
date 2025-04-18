@@ -1,0 +1,20 @@
+Executable = dummy2018.sh
+Universe = vanilla
+use_x509userproxy = true
++JobFlavour = "tomorrow"
+Output      = logs_2018/log_$(Cluster)_$(Process).log
+Error       = logs_2018/log_$(Cluster)_$(Process).log
+Log         = logs_2018/log_$(Cluster)_$(Process).log
++AccountingGroup = "group_u_CMST3.all"
+MY.SingularityImage = "/cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/cms-cat/cmssw-lxplus/cmssw-el7-lxplus:latest/"
+Should_Transfer_Files = YES
+Transfer_Output_Files = ""
+Transfer_Input_Files = step_1_cfg.py, step_2_cfg.py, step_3_cfg.py, step_4_cfg.py, step_5_cfg.py, step_6_cfg.py, step_7_cfg.py, step_1_LO_cfg.py
+Arguments   =  $(ClusterId) $(ProcId)  WWToLNuJJ_01j_LO_SMEFTsim_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2018/WWToLNujj_01j_SMEFT_LO initrwgt_aQGC16_smeft.header
+Queue 1000
+Arguments   =  $(ClusterId) $(ProcId)   WZToLNujj_01j_LO_SMEFTsim_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz   /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2018/WZToLNujj_01j_SMEFT_LO initrwgt_aQGC16_smeft.header
+Queue 1000
+Arguments   =  $(ClusterId) $(ProcId) WZToLNuJJ_01j_LO_EWdim6NLO_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2018/WZToLNuJJ_01j_LO_EWdim6NLO initrwgt_aQGC16.header
+Queue 1000
+Arguments   =  $(ClusterId) $(ProcId) WWToLNuJJ_01j_LO_EWdim6NLO_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz	/eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2018/WWToLNuJJ_01j_LO_EWdim6NLO initrwgt_aQGC16.header
+Queue 1000

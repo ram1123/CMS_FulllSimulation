@@ -32,7 +32,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 
 process.maxEvents = cms.untracked.PSet(
-        input = cms.untracked.int32(2000)
+        input = cms.untracked.int32(1000)
 )
 
 # Input source
@@ -44,7 +44,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('Configuration/GenProduction/python/EXO-RunIISummer20UL17wmLHEGEN-01081-fragment.py nevts:2000'),
+    annotation = cms.untracked.string('Configuration/GenProduction/python/EXO-RunIISummer20UL17wmLHEGEN-01081-fragment.py nevts:1000'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -136,7 +136,7 @@ process.generator = cms.EDFilter("Pythia8ConcurrentHadronizerFilter",
             'Check:epTolErr = 0.01',
             'Beams:setProductionScalesFromLHEF = off',
             'SLHA:keepSM = on',
-            'SLHA:minMassSM = 2000.',
+            'SLHA:minMassSM = 1000.',
             'ParticleDecays:limitTau0 = on',
             'ParticleDecays:tau0Max = 10',
             'ParticleDecays:allowPhotonRadiation = on'
