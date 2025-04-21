@@ -5,16 +5,16 @@ Transfer_Output_Files = ""
 Should_Transfer_Files = YES
 Transfer_Input_Files = step_1_prevfp_cfg.py,step_2_prevfp_cfg.py,step_3_prevfp_cfg.py,step_4_prevfp_cfg.py,step_5_prevfp_cfg.py,step_6_prevfp_cfg.py,step_7_prevfp_cfg.py,step_1_prevfp_LO_cfg.py
 +JobFlavour = "tomorrow"
-Output      = logs_2016pre/log_prevfp_$(Cluster)_$(Process).stdout
-Error       = logs_2016pre/log_prevfp_$(Cluster)_$(Process).stdout
-Log         = logs_2016pre/log_prevfp_$(Cluster)_$(Process).log
+Output      = logs_2016pre_noEFTDecay/log_prevfp_$(Cluster)_$(Process).stdout
+Error       = logs_2016pre_noEFTDecay/log_prevfp_$(Cluster)_$(Process).stdout
+Log         = logs_2016pre_noEFTDecay/log_prevfp_$(Cluster)_$(Process).log
 MY.SingularityImage = "/cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/cms-cat/cmssw-lxplus/cmssw-el7-lxplus:latest/"
 
-#Arguments   =  $(ClusterId) $(ProcId)  WWToLNuJJ_01j_LO_SMEFTsim_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WWToLNujj_01j_SMEFT_LO initrwgt_aQGC16_smeft.header
-#Queue 2500
-#Arguments   =  $(ClusterId) $(ProcId)   WZToLNujj_01j_LO_SMEFTsim_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz   /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WZToLNujj_01j_SMEFT_LO initrwgt_aQGC16_smeft.header
-#Queue 2500
-Arguments   =  $(ClusterId) $(ProcId) WZToLNuJJ_01j_LO_EWdim6NLO_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WZToLNuJJ_01j_LO_EWdim6NLO initrwgt_aQGC16.header
+Arguments   =  $(ClusterId) $(ProcId)  WWToLNuJJ_01j_LO_SMEFTsim_noEFTDecay_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WWToLNuJJ_01j_LO_SMEFTsim_noEFTDecay initrwgt_aQGC16_smeft.header
 Queue 2500
-Arguments   =  $(ClusterId) $(ProcId) WWToLNuJJ_01j_LO_EWdim6NLO_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz	/eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WWToLNuJJ_01j_LO_EWdim6NLO initrwgt_aQGC16.header
+Arguments   =  $(ClusterId) $(ProcId)   WZToLNujj_01j_LO_SMEFTsim_noEFTDecay_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz   /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WZToLNuJJ_01j_LO_SMEFTsim_noEFTDecay initrwgt_aQGC16_smeft.header
 Queue 2500
+#Arguments   =  $(ClusterId) $(ProcId) WZToLNuJJ_01j_LO_EWdim6NLO_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz /eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WZToLNuJJ_01j_LO_EWdim6NLO initrwgt_aQGC16.header
+#Queue 2500
+#Arguments   =  $(ClusterId) $(ProcId) WWToLNuJJ_01j_LO_EWdim6NLO_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz	/eos/user/r/rasharma/post_doc_ihep/aTGC/SMEFT_samples/2016preVFP/WWToLNuJJ_01j_LO_EWdim6NLO initrwgt_aQGC16.header
+#Queue 2500
