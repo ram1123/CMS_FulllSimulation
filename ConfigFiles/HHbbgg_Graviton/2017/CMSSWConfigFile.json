@@ -1,0 +1,60 @@
+[
+    {
+        "step1_wmLHEGEN": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step1_wmLHEGEN.sh",
+            "CMSSWVersion": "CMSSW_10_6_30_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17wmLHEGEN-03718_1_cfg.py",
+            "filein": null,
+            "fileout": "file:HIG-RunIISummer20UL17wmLHEGEN-03718.root"
+        },
+        "step2_SIM": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step2_SIM.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17SIM-03342_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL17wmLHEGEN-03718.root",
+            "fileout": "file:HIG-RunIISummer20UL17SIM-03342.root"
+        },
+        "step3_DIGI": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step3_DIGI.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17DIGIPremix-03342_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL17SIM-03342.root",
+            "fileout": "file:HIG-RunIISummer20UL17DIGIPremix-03342.root"
+        },
+        "step4_HLT": {
+            "scram_arch": "slc7_amd64_gcc630",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step4_HLT.sh",
+            "CMSSWVersion": "CMSSW_9_4_14_UL_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17HLT-03342_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL17DIGIPremix-03342.root",
+            "fileout": "file:HIG-RunIISummer20UL17HLT-03342.root"
+        },
+        "step5_RECO": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step5_RECO.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17RECO-03342_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL17HLT-03342.root",
+            "fileout": "file:HIG-RunIISummer20UL17RECO-03342.root"
+        },
+        "step6_MINIAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step6_MINIAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_20",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17MiniAODv2-03342_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL17RECO-03342.root",
+            "fileout": "file:HIG-RunIISummer20UL17MiniAODv2-03342.root"
+        },
+        "step7_NANOAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton/2017/step7_NANOAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_26",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton/2017/HIG-RunIISummer20UL17NanoAODv9-05132_1_cfg.py",
+            "filein": "file:HIG-RunIISummer20UL17MiniAODv2-03342.root",
+            "fileout": "file:HIG-RunIISummer20UL17NanoAODv9-05132.root"
+        }
+    }
+]

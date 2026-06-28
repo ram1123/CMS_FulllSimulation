@@ -1,6 +1,42 @@
 from collections import OrderedDict
 
 ChainDownloadLinkFromMccM_dict = {
+    'hmumu_dyll_vbf': {
+        '2018': OrderedDict({
+            'step1_wmLHEGEN': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16wmLHEGENAPV-00317',
+            'step2_SIM': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16SIMAPV-00114',
+            'step3_DIGI': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16DIGIPremixAPV-00107',
+            'step4_HLT': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16HLTAPV-00114',
+            'step5_RECO': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16RECOAPV-00114',
+            'step6_MINIAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16MiniAODAPVv2-00077',
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16NanoAODAPVv15-00022'
+            })
+    },
+    'hmumu_dyll': {
+        '2018': OrderedDict({
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-RunIISummer20UL18NanoAODv9-01106'
+        }),
+        '2017': OrderedDict({
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17NanoAODv15-00042'
+        }),
+        '2016preVFP': OrderedDict({
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-RunIISummer20UL16NanoAODAPVv2-00972'
+        }),
+        '2016postVFP': OrderedDict({
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-RunIISummer20UL16NanoAODv9-01128'
+        })
+    },
+    'HHbbgg_Graviton_v1': {
+        '2017': OrderedDict({
+            'step1_wmLHEGEN': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17wmLHEGEN-07106',
+            'step2_SIM': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17SIM-05659',
+            'step3_DIGI': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17DIGIPremix-05659',
+            'step4_HLT': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17HLT-05659',
+            'step5_RECO': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17RECO-05659',
+            'step6_MINIAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17MiniAODv2-05659',
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/B2G-RunIISummer20UL17NanoAODv9-05660'
+            })
+    },
     'HHbbgg_Graviton': {
         '2016preVFP': OrderedDict({
             'step1_wmLHEGEN': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-RunIISummer20UL16wmLHEGENAPV-03454',

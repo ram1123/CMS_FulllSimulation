@@ -1,3 +1,5 @@
+*.err
+PhysicsTools/
 logs/
 *.sh
 step*.py

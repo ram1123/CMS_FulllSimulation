@@ -16,7 +16,7 @@ echo "i am here ${PWD}"
 
 
 
-seed=$(($1 + ${2} + ${2} + 1189))
+seed=$(($1 + ${2} + 1289))
 #seed=123
 basePath=${PWD}
 step1=CMSSW_10_6_30_patch1

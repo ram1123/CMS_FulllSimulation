@@ -65,7 +65,7 @@ logger.handlers[0].setFormatter(ColorfulFormatter())
 
 # Importing configurations from external files
 from utils.ChainDownloadLinkFromMccM_dict import ChainDownloadLinkFromMccM_dict
-from utils.condor_script_template import jdl_file_template_part1of2, jdl_file_template_part2of2, ReplacementDict
+from utils.condor_script_template import jdl_file_template_part1of2, ReplacementDict
 from utils.gridpack_lists import models
 
 
@@ -407,8 +407,18 @@ def generate_jdl_file(args: argparse.Namespace):
     jdl_content.append(jdl_file_template_part1of2.format(
         CondorExecutable=os.path.abspath(args.jobName),
         CommaSeparatedConfigFiles=comma_separated_config_files,
-        CondorQueue=args.queue
+        CondorQueue=args.queue,
+        nQueue=args.nJobs,
+        condor_file_name=args.jobName
     ))
+
+    # Write the JDL content to a file
+    jdl_filename = f"{args.jobName}.jdl"
+    with open(jdl_filename, 'w') as jdl_file:
+        jdl_file.write("\n".join(jdl_content))
+
+    # Create list to store arguments for each job
+    ArgumentList = []
 
     # Loop through the models and generate specific JDL configurations
     for gridpack in models[args.model]:
@@ -430,21 +440,16 @@ def generate_jdl_file(args: argparse.Namespace):
         logging.debug(f"Log directory: {model_log_dir}")
         logging.debug(f"Output directory: {output_dir}")
 
-        jdl_content.append(jdl_file_template_part2of2.format(
-            CondorLogPath=str(model_log_dir),
-            OutputDir=str(output_dir),
-            GridpackWithPath=gridpack,
-            maxEvents=args.nevents,
-            OutputFile=OutputFile,
-            Queue=args.nJobs
-        ))
+        # Append the arguments to the list
+        ArgumentList.append(f"{output_dir} {gridpack} {args.nevents} {OutputFile} {model_log_dir}")
+
         if args.debug:
             break
 
     # Write the JDL content to a file
-    jdl_filename = f"{args.jobName}.jdl"
-    with open(jdl_filename, 'w') as jdl_file:
-        jdl_file.write("\n".join(jdl_content))
+    ArgumentList_filename = f"{args.jobName}.txt"
+    with open(ArgumentList_filename, 'w') as arg_file:
+        arg_file.write("\n".join(ArgumentList))
 
     logging.info(f"JDL file '{jdl_filename}' has been generated.")
 

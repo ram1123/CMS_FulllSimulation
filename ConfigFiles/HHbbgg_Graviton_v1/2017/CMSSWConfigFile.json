@@ -1,0 +1,60 @@
+[
+    {
+        "step1_wmLHEGEN": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step1_wmLHEGEN.sh",
+            "CMSSWVersion": "CMSSW_10_6_46_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17wmLHEGEN-07106_1_cfg.py",
+            "filein": null,
+            "fileout": "file:B2G-RunIISummer20UL17wmLHEGEN-07106.root"
+        },
+        "step2_SIM": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step2_SIM.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17SIM-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17wmLHEGEN-07106.root",
+            "fileout": "file:B2G-RunIISummer20UL17SIM-05659.root"
+        },
+        "step3_DIGI": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step3_DIGI.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17DIGIPremix-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17SIM-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17DIGIPremix-05659.root"
+        },
+        "step4_HLT": {
+            "scram_arch": "slc7_amd64_gcc630",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step4_HLT.sh",
+            "CMSSWVersion": "CMSSW_9_4_14_UL_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17HLT-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17DIGIPremix-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17HLT-05659.root"
+        },
+        "step5_RECO": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step5_RECO.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17RECO-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17HLT-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17RECO-05659.root"
+        },
+        "step6_MINIAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step6_MINIAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_20",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17MiniAODv2-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17RECO-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17MiniAODv2-05659.root"
+        },
+        "step7_NANOAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/HHbbgg_Graviton_v1/2017/step7_NANOAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_32_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/HHbbgg_Graviton_v1/2017/B2G-RunIISummer20UL17NanoAODv9-05660_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17MiniAODv2-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17NanoAODv9-05660.root"
+        }
+    }
+]

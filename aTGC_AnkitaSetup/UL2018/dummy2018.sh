@@ -15,7 +15,7 @@ echo "Input Arguments Gridpack name: $3"
 
 echo "i am here ${PWD}"
 
-seed=$((${1} + ${2} + 17348544))
+seed=$((${1} + ${2} + 1734))
 #seed=123
 basePath=${PWD}
 step1=CMSSW_10_6_30_patch1

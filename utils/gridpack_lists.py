@@ -1,4 +1,8 @@
 models = {
+    'HHbbgg_Graviton_v1': [
+        '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_2/BulkGraviton_hh_GF_HH_narrow_M750/v1/BulkGraviton_hh_GF_HH_narrow_M750_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
+        '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_2/BulkGraviton_hh_GF_HH_narrow_M900/v1/BulkGraviton_hh_GF_HH_narrow_M900_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz'
+    ],
     'HHbbgg_Graviton':[
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_2/BulkGraviton_hh_GF_HH_narrow_M250/v1/BulkGraviton_hh_GF_HH_narrow_M250_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
                 '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_2/BulkGraviton_hh_GF_HH_narrow_M260/v1/BulkGraviton_hh_GF_HH_narrow_M260_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',
