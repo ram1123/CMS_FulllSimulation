@@ -107,7 +107,7 @@ Transfer_Output_Files = ""
 Transfer_Input_Files = {CondorExecutable}.sh, {CommaSeparatedConfigFiles}
 x509userproxy = $ENV(X509_USER_PROXY)
 requirements = TARGET.OpSysAndVer =?= "AlmaLinux9"
-MY.WantOS = "el7"
+MY.WantOS = "el8"
 getenv      = True
 +JobFlavour = "{CondorQueue}"
 request_memory = 12000

@@ -1,8 +1,17 @@
 from collections import OrderedDict
 
 ChainDownloadLinkFromMccM_dict = {
+    'hmumu_dyll_vbf_run2_from_run3': {
+        '2022': OrderedDict({
+            'step1_wmLHEGS': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-Run3Summer22wmLHEGS-02640',
+            'step2_DRPremix': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-Run3Summer22DRPremix-01538',
+            'step3_MiniAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-Run3Summer22MiniAODv4-01570',
+            'step4_NanoAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/HIG-Run3Summer22NanoAODv12-01310',
+        })
+
+    },
     'hmumu_dyll_vbf': {
-        '2018': OrderedDict({
+        '2016preVFP': OrderedDict({
             'step1_wmLHEGEN': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16wmLHEGENAPV-00317',
             'step2_SIM': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16SIMAPV-00114',
             'step3_DIGI': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16DIGIPremixAPV-00107',

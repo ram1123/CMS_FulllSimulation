@@ -49,108 +49,52 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 - ***Step - 4:*** Edit the CMSSW configuration file.
 
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py   --model HHbbgg --year 2016preVFP  --NOdownload --append_to_config_file
+    python3 GetFullSimScriptsFromMCCM.py --model HHbbgg --year 2016preVFP --NOdownload --append_to_config_file
     ```
 
-    1. step-1 config file (wmLHE config file): ***Done by above command***
-       - Here you need to add the input arguments for the additional input arguments for seed value, and gridpack file
+    The `--append_to_config_file` flag automatically handles the following in the step-1 config file:
 
-            ```python
-            from FWCore.ParameterSet.VarParsing import VarParsing
-            options = VarParsing ('analysis')
-            options.register ('seedval',
-                        1238,
-                        VarParsing.multiplicity.singleton,
-                        VarParsing.varType.int,
-                        "random seed for event generation")
-            options.register ('gridpack',
-                        '',
-                        VarParsing.multiplicity.singleton,
-                        VarParsing.varType.string,
-                        "gridpack with path")
-            options.parseArguments()
-            ```
+    | What | Status |
+    |---|---|
+    | VarParsing block (`seedval` + `gridpack` args) | **Automated** |
+    | `process.MessageLogger.cerr.FwkReport.reportEvery = 500` (all steps) | **Automated** (idempotent) |
+    | `input = cms.untracked.int32(options.maxEvents)` in `process.maxEvents` | **Automated** |
+    | `args = cms.vstring(options.gridpack)` in `externalLHEProducer` | **Automated** |
+    | `nEvents = cms.untracked.uint32(options.maxEvents)` in `externalLHEProducer` | **Automated** |
+    | Seed wiring to `options.seedval` (UL: `generator.initialSeed`; Run3: `externalLHEProducer.initialSeed`) | **Automated** |
+    | Commenting out any conflicting hardcoded seed line (Run3 only) | **Automated** |
+    | `input = cms.untracked.int32(-1)` in all downstream step cfgs (step2 onward) | **Automated** |
 
-        - Add the message logger ***Done by above command***
+    The only edit **still required manually** is for UL chains with an `annotation` string:
 
-            ```python
-            process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
-            ```
+    1. **UL chains only** — update the `annotation` string if present:
 
-        - Update the number of input events to be generated. Replace line: ***Do this manually, only in wmLHE file***
+        ```python
+        # Replace:
+        annotation = cms.untracked.string('...fragment.py nevts:10000'),
+        # With:
+        annotation = cms.untracked.string('...fragment.py nevts:'+str(options.maxEvents)),
+        ```
 
-            ```python
-            input = cms.untracked.int32(10000)
-            ```
-
-            with
-
-            ```python
-            input = cms.untracked.int32(options.maxEvents)
-            ```
-
-            ***Note:*** The number of events is already updated in the first step, just set the number of events to be generated to -1 in the subsequent steps.
-
-        - Update the number of events in the fragment line. Replace line:  ***Do this manually, only in wmLHE file***
-
-            ```python
-            annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:10000'),
-            ```
-
-            with
-
-            ```python
-            annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-RunIISummer20UL16wmLHEGENAPV-03448-fragment.py nevts:'+str(options.maxEvents)),
-            ```
-
-        - Update the gridpack path. Replace line:  ***Do this manually, only in wmLHE file***
-
-            ```python
-            args = cms.vstring('/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_0/Radion_hh_narrow_M2000/v1/Radion_hh_narrow_M2000_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz'),
-            ```
-
-            with
-
-            ```python
-            args = cms.vstring(options.gridpack),
-            ```
-
-        - Update the number of events in the gripack generation passage. Replace line:  ***Do this manually, only in wmLHE file***
-
-            ```python
-            nEvents = cms.untracked.uint32(10000),
-            ```
-
-            with
-
-            ```python
-            nEvents = cms.untracked.uint32(options.maxEvents),
-            ```
-
-        - Update the random seed value. Add line: ***Done by above command***
-
-            ```python
-            process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)
-            ```
-            after line:
-
-            ```python
-            process = addMonitoring(process)
-            ```
-    2. step-2 : Update all other config files: Update manually the number of events to "-1" in all the config files.
-
-- ***Step - 5:*** Run the script to generate the executable script and JDL file.
+- ***Step - 5:*** Run the script to generate the executable `.sh` and `.jdl` files.
 
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py --model HHbbgg --year 2016preVFP --NOdownload --nevents 2000 --nJobs 100 --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 --jobName 2016preVFP --UseCustomNanoAOD
+    python3 GetFullSimScriptsFromMCCM.py --model HHbbgg --year 2016preVFP --NOdownload \
+      --nevents 2000 --nJobs 100 \
+      --outDir /eos/user/r/rasharma/post_doc_ihep/double-higgs/nanoAODnTuples/HHTobbgg_Apr2024v3 \
+      --jobName 2016preVFP --UseCustomNanoAOD
     ```
+
+    ***Run3 note:*** The generated `.jdl` sets `MY.WantOS = "el7"` by default. For Run3 chains (CMSSW 12.x / `el8` or CMSSW 13.x / `el8`/`el9`), change this to `"el8"` in the `.jdl` before submitting.
 
 - ***Step - 6:*** Submit the jobs to condor.
 
     ```bash
-    condor_submit UL2016postVFP.jdl
+    condor_submit <jobName>.jdl
     ```
 
 # Few improvements or things to note
 
 1. Directory name `ConfigFiles` is hardcoded in the script
+2. The NanoAOD output step is found dynamically — the last step key containing `nano` (case-insensitive) is used. For UL 7-step chains this is `step7_NANOAOD`; for Run3 4-step chains this is `step4_NanoAOD`.
+3. The `--append_to_config_file` command is idempotent — safe to run multiple times without creating duplicate lines.

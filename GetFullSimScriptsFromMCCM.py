@@ -313,13 +313,13 @@ def build_bash_script(versions: dict, config_files: dict, scramArch: dict, args:
     Constructs the bash script content based on the provided CMSSW versions and configuration files.
     """
     script_content = f"""#!/bin/bash
+set -e
 
 echo "Job started..."
 echo "Starting job on " $(date)
 echo "Running on: $(uname -a)"
 echo "System software: $(cat /etc/redhat-release)"
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-export SCRAM_ARCH=slc7_amd64_gcc700
 echo "###################################################"
 echo "#    List of Input Arguments: "
 echo "###################################################"
@@ -350,16 +350,9 @@ echo ""
         script_content += 'echo "###################################################"\n'
         script_content += f"echo \"Running {step}...\"\n"
         script_content += f"export SCRAM_ARCH={scramArch[step]}\n"
-        script_content += f"if [ -r ${{{step}}}/src ] ; then\n"
-        script_content += f"    echo release ${{{step}}} already exists\n"
-        script_content += f"    echo deleting release ${{{step}}}\n"
-        script_content += f"    rm -rf ${{{step}}}\n"
-        script_content += f"    scram p CMSSW ${{{step}}}\n"
-        script_content += f"else\n"
+        script_content += f"if [ ! -r ${{{step}}}/src ] ; then\n"
         script_content += f"    scram p CMSSW ${{{step}}}\n"
         script_content += f"fi\n"
-        script_content += f"echo list files inside ${{{step}}}\n"
-        script_content += f"ls ${{{step}}}\n"
         script_content += f'echo "--------"\n'
         script_content += f"cd ${{{step}}}/src\n"
         script_content += f"eval `scram runtime -sh`\n"
@@ -380,8 +373,8 @@ echo ""
     script_content += "\n# Copy output nanoAOD file to output directory\n"
     script_content += "echo \"Copying output nanoAOD file to output directory\"\n"
     script_content += "ls -ltrh\n"
-    script_content += "echo \"cp -r HIG-RunIISummer20UL17NanoAODv9-03735.root $3/nanoAOD_$1_$2.root\"\n"    # FIXME: Hardcoded nanoAOD output file name
-    script_content += "cp -r $6 $3/nanoAOD_$1_$2.root\n".format() # FIXME: Hardcoded nanoAOD output file name
+    script_content += "echo \"cp -r $6 $3/nanoAOD_$1_$2.root\"\n"
+    script_content += "cp -r $6 $3/nanoAOD_$1_$2.root\n"
     script_content += "echo \"Job finished on \" $(date)\n"
 
     return script_content
@@ -398,8 +391,14 @@ def generate_jdl_file(args: argparse.Namespace):
     with open(config_file_path, 'r') as file:
         config_data = json.load(file)[0]
     comma_separated_config_files = ', '.join(details['CMSSW_ConfigFile'] for step, details in config_data.items())
-    # OutputFile will be the "fileout" from the step "step7_NANOAOD" in the config file
-    OutputFile = (config_data['step7_NANOAOD']['fileout']).replace("file:", "")
+    # OutputFile: find the NANOAOD step (supports both 7-step UL chains and shorter Run3 chains)
+    nano_step = next(
+        (k for k in config_data if 'nano' in k.lower()),
+        None
+    )
+    if nano_step is None:
+        raise KeyError(f"No NANOAOD step found in {config_file_path}. Keys: {list(config_data.keys())}")
+    OutputFile = (config_data[nano_step]['fileout']).replace("file:", "")
 
     # Prepare paths and template replacements
     jdl_content = []
@@ -455,38 +454,77 @@ def generate_jdl_file(args: argparse.Namespace):
 
 def UpdatewmLHEConfigFile(args: argparse.Namespace):
     """Update the wmLHEConfigFile with the gridpack path, nevents, and seed."""
-    # Append the gridpack path, nevents, and seed to the LHE config file
     logging.info("Appending gridpack path, nevents, and seed to the LHE config file.")
 
-    # grab CMSSWConfigFile and get the CMSSW_ConfigFile from key step1_wmLHEGEN. Then read the file obtained from CMSSWConfigFile
     config_file_path = Path('ConfigFiles') / args.model / args.year / args.CMSSWConfigFile
     with open(config_file_path, 'r') as file:
         config_data = json.load(file)[0]
 
-    # Add  ArgInfo = """process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"""
-    # To each CMSSW_ConfigFile files
+    # Add MessageLogger and set downstream maxEvents to -1 for each CMSSW_ConfigFile (idempotent)
+    logger_line = "process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"
+    step1_key = next((k for k in config_data if k.startswith('step1')), None)
     for step, details in config_data.items():
         CMSSW_ConfigFile = details['CMSSW_ConfigFile']
         with open(CMSSW_ConfigFile, 'r') as file:
             data = file.readlines()
 
-        ArgInfo = """process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)"""
-        insert_index = next((i for i, line in enumerate(data) if 'process.maxEvents ' in line), None) - 1
-        data.insert(insert_index, ArgInfo)
+        if not any(logger_line.strip() in line for line in data):
+            insert_index = next((i for i, line in enumerate(data) if 'process.maxEvents ' in line), None) - 1
+            data.insert(insert_index, logger_line + "\n")
+
+        # For downstream steps (step2+), replace hardcoded maxEvents input and output with -1 (idempotent per line)
+        if step != step1_key:
+            in_maxevents_block = False
+            for i, line in enumerate(data):
+                if 'process.maxEvents' in line:
+                    in_maxevents_block = True
+                if in_maxevents_block and re.search(r'(?:input|output)\s*=\s*cms\.untracked\.int32\(\d+\)', line):
+                    data[i] = re.sub(r'cms\.untracked\.int32\(\d+\)',
+                                      'cms.untracked.int32(-1)', line)
+                if in_maxevents_block and line.strip() == ')':
+                    break
 
         with open(CMSSW_ConfigFile, 'w') as file:
             file.writelines(data)
 
-    for step, details in config_data.items():
-        if step == 'step1_wmLHEGEN':
-            CMSSW_ConfigFile = details['CMSSW_ConfigFile']
-            break
+    if step1_key is None:
+        logging.error("No step1 found in config_data; cannot add VarParsing.")
+        return
 
+    CMSSW_ConfigFile = config_data[step1_key]['CMSSW_ConfigFile']
     logger.debug(f"CMSSW_ConfigFile: {CMSSW_ConfigFile}")
+
     with open(CMSSW_ConfigFile, 'r') as file:
         data = file.readlines()
 
-    ArgInfo = """
+    # Replace hardcoded maxEvents input and output with options.maxEvents in step1 (idempotent per line)
+    in_maxevents_block = False
+    for i, line in enumerate(data):
+        if 'process.maxEvents' in line:
+            in_maxevents_block = True
+        if in_maxevents_block and re.search(r'(?:input|output)\s*=\s*cms\.untracked\.int32\(\d+\)', line):
+            data[i] = re.sub(r'cms\.untracked\.int32\(\d+\)',
+                              'cms.untracked.int32(options.maxEvents)', line)
+        if in_maxevents_block and line.strip() == ')':
+            break
+
+    # Replace hardcoded gridpack path and nEvents inside the externalLHEProducer block (idempotent)
+    in_lhe_block = False
+    for i, line in enumerate(data):
+        if 'externalLHEProducer' in line and 'EDProducer' in line:
+            in_lhe_block = True
+        if in_lhe_block:
+            if re.search(r"args\s*=\s*cms\.vstring\('[^']*'\)", line) and 'options.gridpack' not in line:
+                data[i] = re.sub(r"cms\.vstring\('[^']*'\)", "cms.vstring(options.gridpack)", line)
+            if re.search(r'nEvents\s*=\s*cms\.untracked\.uint32\(\d+\)', line) and 'options.maxEvents' not in line:
+                data[i] = re.sub(r'cms\.untracked\.uint32\(\d+\)',
+                                  'cms.untracked.uint32(options.maxEvents)', line)
+            if line.strip() == ')':
+                break  # end of externalLHEProducer block
+
+    # Add VarParsing block (idempotent — skip if already present)
+    if not any('VarParsing' in line for line in data):
+        VarParsingBlock = """
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.register ('seedval',
@@ -501,20 +539,35 @@ options.register ('gridpack',
             "gridpack with path")
 options.parseArguments()
 """
+        insert_index = next((i for i, line in enumerate(data) if 'from Configuration.Eras' in line), None) + 1
+        data.insert(insert_index, VarParsingBlock)
 
-    insert_index = 0
-    insert_index = next((i for i, line in enumerate(data) if 'from Configuration.Eras' in line), None) + 1
-    data.insert(insert_index, ArgInfo)
+    # Determine which RNG service controls the LHE seed:
+    #   Run3 (wmLHEGS): externalLHEProducer.initialSeed
+    #   UL Run2 (wmLHEGEN): generator.initialSeed
+    if any('externalLHEProducer.initialSeed' in line for line in data):
+        seed_service = 'externalLHEProducer'
+    else:
+        seed_service = 'generator'
 
-    ArgInfo = f"""process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)"""
-    insert_index = next((i for i, line in enumerate(data) if 'process = addMonitoring(process)' in line), None) + 1
-    data.insert(insert_index, ArgInfo)
+    # Add seed line (idempotent — skip if already present)
+    if not any('options.seedval' in line for line in data):
+        seed_line = f"process.RandomNumberGeneratorService.{seed_service}.initialSeed = cms.untracked.uint32(options.seedval)"
+        insert_index = next((i for i, line in enumerate(data) if 'process = addMonitoring(process)' in line), None) + 1
+        data.insert(insert_index, seed_line + "\n")
+        # Comment out any hardcoded initialSeed line that would override options.seedval
+        hardcoded_pattern = f"{seed_service}.initialSeed="
+        data = [
+            f"# {line.rstrip()}  # commented out: replaced by options.seedval\n"
+            if hardcoded_pattern in line and 'options.seedval' not in line and not line.startswith('#')
+            else line
+            for line in data
+        ]
 
     with open(CMSSW_ConfigFile, 'w') as file:
         file.writelines(data)
 
-
-    logging.debug("Exitting after appending gridpack path, nevents, and seed to the LHE config file.")
+    logging.debug("Finished appending VarParsing and seed to the LHE config file.")
 
 def parse_arguments():
     """Parse command-line arguments."""

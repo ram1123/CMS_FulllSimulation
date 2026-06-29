@@ -1,0 +1,44 @@
+[
+    {
+        "step1_wmLHEGS": {
+            "scram_arch": "el8_amd64_gcc10",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step1_wmLHEGS.sh",
+            "CMSSWVersion": "CMSSW_12_4_25",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22wmLHEGS-02640_1_cfg.py",
+            "filein": null,
+            "fileout": "file:HIG-Run3Summer22wmLHEGS-02640.root"
+        },
+        "step2_DRPremixDIGI": {
+            "scram_arch": "el8_amd64_gcc10",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step2_DRPremix.sh",
+            "CMSSWVersion": "CMSSW_12_4_25",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22DRPremix-01538_1_cfg.py",
+            "filein": "file:HIG-Run3Summer22wmLHEGS-02640.root",
+            "fileout": "file:HIG-Run3Summer22DRPremix-01538_0.root"
+        },
+        "step3_DRPremixRECO": {
+            "scram_arch": "el8_amd64_gcc10",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step2_DRPremix.sh",
+            "CMSSWVersion": "CMSSW_12_4_25",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22DRPremix-01538_2_cfg.py",
+            "filein": "file:HIG-Run3Summer22DRPremix-01538_0.root",
+            "fileout": "file:HIG-Run3Summer22DRPremix-01538.root"
+        },
+        "step4_MiniAOD": {
+            "scram_arch": "el8_amd64_gcc11",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step3_MiniAOD.sh",
+            "CMSSWVersion": "CMSSW_13_0_24",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22MiniAODv4-01570_1_cfg.py",
+            "filein": "file:HIG-Run3Summer22DRPremix-01538.root",
+            "fileout": "file:HIG-Run3Summer22MiniAODv4-01570.root"
+        },
+        "step5_NanoAOD": {
+            "scram_arch": "el8_amd64_gcc11",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step4_NanoAOD.sh",
+            "CMSSWVersion": "CMSSW_13_0_24",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22NanoAODv12-01310_1_cfg.py",
+            "filein": "file:HIG-Run3Summer22MiniAODv4-01570.root",
+            "fileout": "file:HIG-Run3Summer22NanoAODv12-01310.root"
+        }
+    }
+]
