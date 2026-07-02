@@ -1,8 +1,8 @@
 # Auto generated configuration file
-# using: 
-# Revision: 1.19 
-# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: --scenario pp --era Run2_2017,run2_nanoAOD_106Xv2 --customise Configuration/DataProcessing/Utils.addMonitoring --step NANO --conditions 106X_mc2017_realistic_v9 --datatier NANOAODSIM --eventcontent NANOAODSIM --python_filename HIG-Run3Summer22NanoAODv12-01310_1_cfg.py --fileout file:HIG-Run3Summer22NanoAODv12-01310.root --filein file:HIG-Run3Summer22MiniAODv4-01570.root --number 100 --no_exec --mc
+# using:
+# Revision: 1.19
+# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
+# with command line options: --era Run2_2017,run2_nanoAOD_106Xv2 --customise Configuration/DataProcessing/Utils.addMonitoring --step NANO --conditions 106X_mc2017_realistic_v9 --datatier NANOAODSIM --eventcontent NANOAODSIM --python_filename B2G-RunIISummer20UL17NanoAODv9-05660_1_cfg.py --fileout file:B2G-RunIISummer20UL17NanoAODv9-05660.root --filein file:B2G-RunIISummer20UL17MiniAODv2-05659.root --number -1 --number_out -1 --no_exec --mc
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
@@ -21,14 +21,15 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('PhysicsTools.NanoAOD.nano_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100)
+    input = cms.untracked.int32(-1),
+    output = cms.untracked.int32(-1)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:HIG-Run3Summer22MiniAODv4-01570.root'),
+    fileNames = cms.untracked.vstring('file:B2G-RunIISummer20UL17MiniAODv2-05659.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -38,7 +39,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('--scenario nevts:100'),
+    annotation = cms.untracked.string('--era nevts:-1'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -52,7 +53,7 @@ process.NANOAODSIMoutput = cms.OutputModule("NanoAODOutputModule",
         dataTier = cms.untracked.string('NANOAODSIM'),
         filterName = cms.untracked.string('')
     ),
-    fileName = cms.untracked.string('file:HIG-Run3Summer22NanoAODv12-01310.root'),
+    fileName = cms.untracked.string('file:B2G-RunIISummer20UL17NanoAODv9-05660.root'),
     outputCommands = process.NANOAODSIMEventContent.outputCommands
 )
 
@@ -75,15 +76,15 @@ associatePatAlgosToolsTask(process)
 # customisation of the process.
 
 # Automatic addition of the customisation function from PhysicsTools.NanoAOD.nano_cff
-from PhysicsTools.NanoAOD.nano_cff import nanoAOD_customizeMC 
+from PhysicsTools.NanoAOD.nano_cff import nanoAOD_customizeMC
 
-#call to customisation function nanoAOD_customizeMC imported from PhysicsTools.NanoAOD.nano_cff
+# call to customisation function nanoAOD_customizeMC imported from PhysicsTools.NanoAOD.nano_cff
 process = nanoAOD_customizeMC(process)
 
 # Automatic addition of the customisation function from Configuration.DataProcessing.Utils
-from Configuration.DataProcessing.Utils import addMonitoring 
+from Configuration.DataProcessing.Utils import addMonitoring
 
-#call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
+# call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
 
 # End of customisation functions

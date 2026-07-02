@@ -355,7 +355,7 @@ echo ""
         script_content += f"fi\n"
         script_content += f'echo "--------"\n'
         script_content += f"cd ${{{step}}}/src\n"
-        script_content += f"eval `scram runtime -sh`\n"
+        script_content += f"eval `scram runtime -sh 2>&1 | grep -v \"^WARNING\\|^--------\\|^SCRAM\"`\n"
         if args.UseCustomNanoAOD and step == 'step7': # FIXME: This is a temporary fix
             script_content += f"git cms-merge-topic -u ram1123:CMSSW_10_6_30_HHWWgg_nanoV9\n"
             script_content += f"./PhysicsTools/NanoTuples/scripts/install_onnxruntime.sh\n"

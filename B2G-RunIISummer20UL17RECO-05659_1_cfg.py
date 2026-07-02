@@ -1,8 +1,8 @@
 # Auto generated configuration file
-# using: 
-# Revision: 1.19 
-# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: --era Run2_2017 --customise Configuration/DataProcessing/Utils.addMonitoring --step RAW2DIGI,L1Reco,RECO,RECOSIM --geometry DB:Extended --conditions 106X_mc2017_realistic_v6 --datatier AODSIM --eventcontent AODSIM --python_filename HIG-Run3Summer22DRPremix-01538_2_cfg.py --fileout file:HIG-Run3Summer22DRPremix-01538.root --filein file:HIG-Run3Summer22DRPremix-01538_0.root --number 100 --no_exec --mc
+# using:
+# Revision: 1.19
+# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
+# with command line options: --era Run2_2017 --customise Configuration/DataProcessing/Utils.addMonitoring --step RAW2DIGI,L1Reco,RECO,RECOSIM --geometry DB:Extended --conditions 106X_mc2017_realistic_v6 --datatier AODSIM --eventcontent AODSIM --python_filename B2G-RunIISummer20UL17RECO-05659_1_cfg.py --fileout file:B2G-RunIISummer20UL17RECO-05659.root --filein file:B2G-RunIISummer20UL17HLT-05659.root --number -1 --number_out -1 --runUnscheduled --no_exec --mc
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
@@ -23,14 +23,15 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.RecoSim_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100)
+    input = cms.untracked.int32(-1),
+    output = cms.untracked.int32(-1)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:HIG-Run3Summer22DRPremix-01538_0.root'),
+    fileNames = cms.untracked.vstring('file:B2G-RunIISummer20UL17HLT-05659.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -40,7 +41,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('--era nevts:100'),
+    annotation = cms.untracked.string('--era nevts:-1'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -55,7 +56,7 @@ process.AODSIMoutput = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('')
     ),
     eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-    fileName = cms.untracked.string('file:HIG-Run3Summer22DRPremix-01538.root'),
+    fileName = cms.untracked.string('file:B2G-RunIISummer20UL17RECO-05659.root'),
     outputCommands = process.AODSIMEventContent.outputCommands
 )
 
@@ -81,12 +82,16 @@ associatePatAlgosToolsTask(process)
 # customisation of the process.
 
 # Automatic addition of the customisation function from Configuration.DataProcessing.Utils
-from Configuration.DataProcessing.Utils import addMonitoring 
+from Configuration.DataProcessing.Utils import addMonitoring
 
 #call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
 
 # End of customisation functions
+#do not add changes to your config after this point (unless you know what you are doing)
+from FWCore.ParameterSet.Utilities import convertToUnscheduled
+process=convertToUnscheduled(process)
+
 
 # Customisation from command line
 

@@ -1,0 +1,17 @@
+Executable = /afs/cern.ch/work/r/rasharma/doubleHiggs/ResonantAnalysis/CMS_FulllSimulation/hmumu_dyll_vbf_Run3Summer22.sh
+Universe = vanilla
+Notification = ERROR
+Should_Transfer_Files = YES
+Transfer_Output_Files = ""
+Transfer_Input_Files = /afs/cern.ch/work/r/rasharma/doubleHiggs/ResonantAnalysis/CMS_FulllSimulation/hmumu_dyll_vbf_Run3Summer22.sh, HIG-Run3Summer22wmLHEGS-02640_1_cfg.py, B2G-RunIISummer20UL17DIGIPremix-05659_1_cfg.py, B2G-RunIISummer20UL17HLT-05659_1_cfg.py, B2G-RunIISummer20UL17RECO-05659_1_cfg.py, B2G-RunIISummer20UL17MiniAODv2-05659_1_cfg.py, B2G-RunIISummer20UL17NanoAODv9-05660_1_cfg.py
+x509userproxy = $ENV(X509_USER_PROXY)
+requirements = TARGET.OpSysAndVer =?= "AlmaLinux9"
+getenv      = True
++JobFlavour = "testmatch"
+request_memory = 12000
+request_cpus = 8
+Output = $(CondorLogPath)/log_$(Cluster)_$(Process).stdout
+Error = $(CondorLogPath)/log_$(Cluster)_$(Process).err
+Log = $(CondorLogPath)/log_$(Cluster)_$(Process).log
+Arguments = "$(Cluster) $(Process) $(OutputDir) $(GridpackWithPath) $(maxEvents) $(OutputFile)"
+queue 2000 OutputDir, GridpackWithPath, maxEvents, OutputFile, CondorLogPath from hmumu_dyll_vbf_Run3Summer22.txt
