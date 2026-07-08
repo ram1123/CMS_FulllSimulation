@@ -1,44 +1,52 @@
 [
     {
         "step1_wmLHEGS": {
-            "scram_arch": "el8_amd64_gcc10",
+            "scram_arch": "slc7_amd64_gcc700",
             "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step1_wmLHEGS.sh",
-            "CMSSWVersion": "CMSSW_12_4_25",
+            "CMSSWVersion": "CMSSW_10_6_17",
             "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22wmLHEGS-02640_1_cfg.py",
             "filein": null,
             "fileout": "file:HIG-Run3Summer22wmLHEGS-02640.root"
         },
-        "step2_DRPremixDIGI": {
-            "scram_arch": "el8_amd64_gcc10",
-            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step2_DRPremix.sh",
-            "CMSSWVersion": "CMSSW_12_4_25",
-            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22DRPremix-01538_1_cfg.py",
+        "step2_DIGI": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step2_DIGI.sh",
+            "CMSSWVersion": "CMSSW_10_6_17",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/B2G-RunIISummer20UL17DIGIPremix-05659_1_cfg.py",
             "filein": "file:HIG-Run3Summer22wmLHEGS-02640.root",
-            "fileout": "file:HIG-Run3Summer22DRPremix-01538_0.root"
+            "fileout": "file:B2G-RunIISummer20UL17DIGIPremix-05659.root"
         },
-        "step3_DRPremixRECO": {
-            "scram_arch": "el8_amd64_gcc10",
-            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step2_DRPremix.sh",
-            "CMSSWVersion": "CMSSW_12_4_25",
-            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22DRPremix-01538_2_cfg.py",
-            "filein": "file:HIG-Run3Summer22DRPremix-01538_0.root",
-            "fileout": "file:HIG-Run3Summer22DRPremix-01538.root"
+        "step3_HLT": {
+            "scram_arch": "slc7_amd64_gcc630",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step3_HLT.sh",
+            "CMSSWVersion": "CMSSW_9_4_14_UL",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/B2G-RunIISummer20UL17HLT-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17DIGIPremix-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17HLT-05659.root"
         },
-        "step4_MiniAOD": {
-            "scram_arch": "el8_amd64_gcc11",
-            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step3_MiniAOD.sh",
-            "CMSSWVersion": "CMSSW_13_0_24",
-            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22MiniAODv4-01570_1_cfg.py",
-            "filein": "file:HIG-Run3Summer22DRPremix-01538.root",
-            "fileout": "file:HIG-Run3Summer22MiniAODv4-01570.root"
+        "step4_RECO": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step4_RECO.sh",
+            "CMSSWVersion": "CMSSW_10_6_17",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/B2G-RunIISummer20UL17RECO-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17HLT-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17RECO-05659.root"
         },
-        "step5_NanoAOD": {
-            "scram_arch": "el8_amd64_gcc11",
-            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step4_NanoAOD.sh",
-            "CMSSWVersion": "CMSSW_13_0_24",
-            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/HIG-Run3Summer22NanoAODv12-01310_1_cfg.py",
-            "filein": "file:HIG-Run3Summer22MiniAODv4-01570.root",
-            "fileout": "file:HIG-Run3Summer22NanoAODv12-01310.root"
+        "step5_MiniAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step5_MiniAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_20",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/B2G-RunIISummer20UL17MiniAODv2-05659_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17RECO-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17MiniAODv2-05659.root"
+        },
+        "step6_NanoAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/step6_NanoAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_32",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf_run2_from_run3/2022/B2G-RunIISummer20UL17NanoAODv9-05660_1_cfg.py",
+            "filein": "file:B2G-RunIISummer20UL17MiniAODv2-05659.root",
+            "fileout": "file:B2G-RunIISummer20UL17NanoAODv9-05660.root"
         }
     }
 ]

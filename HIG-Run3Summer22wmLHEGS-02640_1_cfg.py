@@ -21,6 +21,8 @@ options.register ('gridpack',
             "gridpack with path")
 options.parseArguments()
 
+print(f"inside cmssw config: seed value: {options.seedval}")
+
 process = cms.Process('SIM',Run2_2017)
 
 # import of standard configurations

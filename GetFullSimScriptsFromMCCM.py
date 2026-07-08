@@ -403,12 +403,14 @@ def generate_jdl_file(args: argparse.Namespace):
     # Prepare paths and template replacements
     jdl_content = []
     logging.debug(f"Comma-separated config files: {comma_separated_config_files}")
+    shared_log_file = os.path.abspath(f"{args.jobName}_condor.log")
     jdl_content.append(jdl_file_template_part1of2.format(
         CondorExecutable=os.path.abspath(args.jobName),
         CommaSeparatedConfigFiles=comma_separated_config_files,
         CondorQueue=args.queue,
         nQueue=args.nJobs,
-        condor_file_name=args.jobName
+        condor_file_name=args.jobName,
+        SharedLogFile=shared_log_file
     ))
 
     # Write the JDL content to a file

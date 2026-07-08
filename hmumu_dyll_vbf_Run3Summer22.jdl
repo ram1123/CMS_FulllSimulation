@@ -12,6 +12,6 @@ request_memory = 12000
 request_cpus = 8
 Output = $(CondorLogPath)/log_$(Cluster)_$(Process).stdout
 Error = $(CondorLogPath)/log_$(Cluster)_$(Process).err
-Log = $(CondorLogPath)/log_$(Cluster)_$(Process).log
+Log = $(CondorLogPath)/hmumu_dyll_vbf_Run3Summer22_condor.log
 Arguments = "$(Cluster) $(Process) $(OutputDir) $(GridpackWithPath) $(maxEvents) $(OutputFile)"
 queue 2000 OutputDir, GridpackWithPath, maxEvents, OutputFile, CondorLogPath from hmumu_dyll_vbf_Run3Summer22.txt

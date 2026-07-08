@@ -32,6 +32,7 @@ step6=CMSSW_10_6_32
 step6_cfg=B2G-RunIISummer20UL17NanoAODv9-05660_1_cfg.py
 
 seed=$(($1 + $2))
+echo "here seed value ${seed}"
 
 echo "###################################################"
 echo "Running step1..."

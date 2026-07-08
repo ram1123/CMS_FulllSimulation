@@ -107,14 +107,13 @@ Transfer_Output_Files = ""
 Transfer_Input_Files = {CondorExecutable}.sh, {CommaSeparatedConfigFiles}
 x509userproxy = $ENV(X509_USER_PROXY)
 requirements = TARGET.OpSysAndVer =?= "AlmaLinux9"
-MY.WantOS = "el8"
 getenv      = True
 +JobFlavour = "{CondorQueue}"
 request_memory = 12000
 request_cpus = 8
 Output = $(CondorLogPath)/log_$(Cluster)_$(Process).stdout
 Error = $(CondorLogPath)/log_$(Cluster)_$(Process).err
-Log = $(CondorLogPath)/log_$(Cluster)_$(Process).log
+Log = {SharedLogFile}
 Arguments = "$(Cluster) $(Process) $(OutputDir) $(GridpackWithPath) $(maxEvents) $(OutputFile)"
 queue  {nQueue} OutputDir, GridpackWithPath, maxEvents, OutputFile, CondorLogPath from {condor_file_name}.txt
 '''

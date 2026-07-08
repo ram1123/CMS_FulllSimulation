@@ -1,14 +1,14 @@
 #!/bin/bash
 
-export SCRAM_ARCH=el8_amd64_gcc10
+export SCRAM_ARCH=slc7_amd64_gcc700
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-if [ -r CMSSW_12_4_25/src ] ; then
-  echo release CMSSW_12_4_25 already exists
+if [ -r CMSSW_10_6_17/src ] ; then
+  echo release CMSSW_10_6_17 already exists
 else
-  scram p CMSSW CMSSW_12_4_25
+  scram p CMSSW CMSSW_10_6_17
 fi
-cd CMSSW_12_4_25/src
+cd CMSSW_10_6_17/src
 eval `scram runtime -sh`
 
 cp -r ../../Configuration .

@@ -35,6 +35,6 @@ EVENTS=600
 
 
 # cmsDriver command
-cmsDriver.py  --era Run2_2017 --customise Configuration/DataProcessing/Utils.addMonitoring --step PAT --geometry DB:Extended --conditions 106X_mc2017_realistic_v9 --datatier MINIAODSIM --eventcontent MINIAODSIM --python_filename HIG-Run3Summer22MiniAODv4-01570_1_cfg.py --fileout file:HIG-Run3Summer22MiniAODv4-01570.root --filein file:HIG-Run3Summer22DRPremix-01538.root --number 600 --number_out 600 --no_exec --mc || exit $? ;
+cmsDriver.py  --era Run2_2017 --customise Configuration/DataProcessing/Utils.addMonitoring --step PAT --geometry DB:Extended --conditions 106X_mc2017_realistic_v9 --datatier MINIAODSIM --eventcontent MINIAODSIM --python_filename HIG-Run3Summer22MiniAODv4-01570_1_cfg.py --fileout file:HIG-Run3Summer22MiniAODv4-01570.root --filein file:HIG-Run3Summer22DRPremix-01538.root --number 600 --number_out 600 --runUnscheduled --no_exec --mc || exit $? ;
 
 # End of HIG-Run3Summer22MiniAODv4-01570_test.sh file
