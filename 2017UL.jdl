@@ -1,0 +1,18 @@
+Executable = /afs/cern.ch/work/r/rasharma/doubleHiggs/ResonantAnalysis/CMS_FulllSimulation/2017UL.sh
+Universe = vanilla
+Notification = ERROR
+Should_Transfer_Files = YES
+Transfer_Output_Files = ""
+Transfer_Input_Files = /afs/cern.ch/work/r/rasharma/doubleHiggs/ResonantAnalysis/CMS_FulllSimulation/2017UL.sh, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17wmLHEGEN-00320_1_cfg.py, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17SIM-00109_1_cfg.py, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17DIGIPremix-00109_1_cfg.py, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17HLT-00109_1_cfg.py, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17RECO-00109_1_cfg.py, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17MiniAODv2-00096_1_cfg.py, ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17NanoAODv15-00038_1_cfg.py
+x509userproxy = $ENV(X509_USER_PROXY)
+requirements = TARGET.OpSysAndVer =?= "AlmaLinux9"
+MY.SingularityImage = "/cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/cms-cat/cmssw-lxplus/cmssw-el7-lxplus:latest/"
+getenv      = True
++JobFlavour = "testmatch"
+request_memory = 12000
+request_cpus = 8
+Output = $(CondorLogPath)/log_$(Cluster)_$(Process).stdout
+Error = $(CondorLogPath)/log_$(Cluster)_$(Process).err
+Log = /afs/cern.ch/work/r/rasharma/doubleHiggs/ResonantAnalysis/CMS_FulllSimulation/2017UL_condor.log
+Arguments = "$(Cluster) $(Process) $(OutputDir) $(GridpackWithPath) $(maxEvents) $(OutputFile)"
+queue  1000 OutputDir, GridpackWithPath, maxEvents, OutputFile, CondorLogPath from 2017UL.txt

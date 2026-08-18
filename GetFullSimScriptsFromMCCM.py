@@ -400,6 +400,14 @@ def generate_jdl_file(args: argparse.Namespace):
         raise KeyError(f"No NANOAOD step found in {config_file_path}. Keys: {list(config_data.keys())}")
     OutputFile = (config_data[nano_step]['fileout']).replace("file:", "")
 
+    # Run2 UL chains use slc7-based CMSSW releases, which need the el7 Singularity
+    # image to run on AlmaLinux9 nodes; Run3 chains use native el8/el9 releases.
+    uses_slc7 = any(details.get('scram_arch', '').startswith('slc7') for details in config_data.values())
+    SingularityImageLine = (
+        'MY.SingularityImage = "/cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/cms-cat/cmssw-lxplus/cmssw-el7-lxplus:latest/"\n'
+        if uses_slc7 else ''
+    )
+
     # Prepare paths and template replacements
     jdl_content = []
     logging.debug(f"Comma-separated config files: {comma_separated_config_files}")
@@ -410,7 +418,8 @@ def generate_jdl_file(args: argparse.Namespace):
         CondorQueue=args.queue,
         nQueue=args.nJobs,
         condor_file_name=args.jobName,
-        SharedLogFile=shared_log_file
+        SharedLogFile=shared_log_file,
+        SingularityImageLine=SingularityImageLine
     ))
 
     # Write the JDL content to a file
