@@ -3,7 +3,8 @@ models = {
         '/afs/cern.ch/user/r/rasharma/work/public/HMuMu/DY_VBF_Filter/dymumu012j_5f_NLO_FXFX_M105to160_el9_amd64_gcc11_CMSSW_13_2_9_tarball.tar.xz'
     ],
     'hmumu_dyll_vbf': [
-        '/afs/cern.ch/user/r/rasharma/work/public/HMuMu/DY_VBF_Filter/dymumu012j_5f_NLO_FXFX_M105to160_el9_amd64_gcc11_CMSSW_13_2_9_tarball.tar.xz'
+        # '/afs/cern.ch/user/r/rasharma/work/public/HMuMu/DY_VBF_Filter/dymumu012j_5f_NLO_FXFX_M105to160_el9_amd64_gcc11_CMSSW_13_2_9_tarball.tar.xz'
+        '/afs/cern.ch/user/r/rasharma/work/generator_studies/genproductions_scripts/bin/MadGraph5_aMCatNLO/Gridpacks_12Aug2026_From_PAF_PDFSYSFix/dymumu012j_5f_NLO_FXFX_M105to160_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz'
         ],
     'HHbbgg_Graviton_v1': [
         '/cvmfs/cms.cern.ch/phys_generator/gridpacks/UL/13TeV/madgraph/V5_2.6.5/GF_Spin_2/BulkGraviton_hh_GF_HH_narrow_M750/v1/BulkGraviton_hh_GF_HH_narrow_M750_slc7_amd64_gcc700_CMSSW_10_6_19_tarball.tar.xz',

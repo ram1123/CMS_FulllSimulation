@@ -19,7 +19,16 @@ ChainDownloadLinkFromMccM_dict = {
             'step5_RECO': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16RECOAPV-00114',
             'step6_MINIAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16MiniAODAPVv2-00077',
             'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL16NanoAODAPVv15-00022'
-            })
+            }),
+        '2017': OrderedDict({
+            'step1_wmLHEGEN': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17wmLHEGEN-00320',
+            'step2_SIM': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17SIM-00109',
+            'step3_DIGI': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17DIGIPremix-00109',
+            'step4_HLT': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17HLT-00109',
+            'step5_RECO': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17RECO-00109',
+            'step6_MINIAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17MiniAODv2-00096',
+            'step7_NANOAOD': 'https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_setup/SMP-RunIISummer20UL17NanoAODv15-00038'
+            }),
     },
     'hmumu_dyll': {
         '2018': OrderedDict({
