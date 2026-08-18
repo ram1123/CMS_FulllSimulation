@@ -7,6 +7,20 @@ import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
 
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing ('analysis')
+options.register ('seedval',
+            1238,
+            VarParsing.multiplicity.singleton,
+            VarParsing.varType.int,
+            "random seed for event generation")
+options.register ('gridpack',
+            '',
+            VarParsing.multiplicity.singleton,
+            VarParsing.varType.string,
+            "gridpack with path")
+options.parseArguments()
+
 process = cms.Process('GEN',Run2_2017)
 
 # import of standard configurations
@@ -22,10 +36,11 @@ process.load('IOMC.EventVertexGenerators.VtxSmearedRealistic25ns13TeVEarly2017Co
 process.load('GeneratorInterface.Core.genFilterSummary_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(3668),
-    output = cms.untracked.int32(100)
+    input = cms.untracked.int32(options.maxEvents),
+    output = cms.untracked.int32(options.maxEvents)
 )
 
 # Input source
@@ -37,7 +52,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('Configuration/GenProduction/python/DY_VBF_Filter_mjj300GeV_fragment.py nevts:3668'),
+    annotation = cms.untracked.string('Configuration/GenProduction/python/DY_VBF_Filter_mjj300GeV_fragment.py nevts:'+str(options.maxEvents)),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -234,9 +249,9 @@ process.genParticlesForJetsNoNu = cms.EDProducer("InputGenJetsParticleSelector",
 
 
 process.externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
-    args = cms.vstring('/cvmfs/cms.cern.ch/phys_generator/gridpacks/RunIII/13p6TeV/slc7_amd64_gcc10/MadGraph5_aMCatNLO/dymumu012j_5f_NLO_FXFX_M105to160_slc7_amd64_gcc10_CMSSW_12_4_8_tarball.tar.xz'),
+    args = cms.vstring(options.gridpack),
     generateConcurrently = cms.untracked.bool(False),
-    nEvents = cms.untracked.uint32(3668),
+    nEvents = cms.untracked.uint32(options.maxEvents),
     numberOfParameters = cms.uint32(1),
     outputFile = cms.string('cmsgrid_final.lhe'),
     scriptName = cms.FileInPath('GeneratorInterface/LHEInterface/data/run_generic_tarball_cvmfs.sh')
@@ -271,6 +286,7 @@ from Configuration.DataProcessing.Utils import addMonitoring
 
 #call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
+process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)
 
 # End of customisation functions
 

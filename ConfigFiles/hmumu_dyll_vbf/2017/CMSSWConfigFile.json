@@ -15,6 +15,46 @@
             "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17SIM-00109_1_cfg.py",
             "filein": "file:SMP-RunIISummer20UL17wmLHEGEN-00320.root",
             "fileout": "file:SMP-RunIISummer20UL17SIM-00109.root"
+        },
+        "step3_DIGI": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step3_DIGI.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17DIGIPremix-00109_1_cfg.py",
+            "filein": "file:SMP-RunIISummer20UL17SIM-00109.root",
+            "fileout": "file:SMP-RunIISummer20UL17DIGIPremix-00109.root"
+        },
+        "step4_HLT": {
+            "scram_arch": "slc7_amd64_gcc630",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step4_HLT.sh",
+            "CMSSWVersion": "CMSSW_9_4_14_UL_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17HLT-00109_1_cfg.py",
+            "filein": "file:SMP-RunIISummer20UL17DIGIPremix-00109.root",
+            "fileout": "file:SMP-RunIISummer20UL17HLT-00109.root"
+        },
+        "step5_RECO": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step5_RECO.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17RECO-00109_1_cfg.py",
+            "filein": "file:SMP-RunIISummer20UL17HLT-00109.root",
+            "fileout": "file:SMP-RunIISummer20UL17RECO-00109.root"
+        },
+        "step6_MINIAOD": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step6_MINIAOD.sh",
+            "CMSSWVersion": "CMSSW_10_6_20",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17MiniAODv2-00096_1_cfg.py",
+            "filein": "file:SMP-RunIISummer20UL17RECO-00109.root",
+            "fileout": "file:SMP-RunIISummer20UL17MiniAODv2-00096.root"
+        },
+        "step7_NANOAOD": {
+            "scram_arch": "el8_amd64_gcc12",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step7_NANOAOD.sh",
+            "CMSSWVersion": "CMSSW_15_0_15_patch4",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17NanoAODv15-00038_1_cfg.py",
+            "filein": "file:SMP-RunIISummer20UL17MiniAODv2-00096.root",
+            "fileout": "file:SMP-RunIISummer20UL17NanoAODv15-00038.root"
         }
     }
 ]

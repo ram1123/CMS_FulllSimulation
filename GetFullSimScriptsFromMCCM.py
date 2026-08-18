@@ -566,6 +566,11 @@ options.parseArguments()
             for line in data
         ]
 
+    # Replace hardcoded nevts in the annotation string with options.maxEvents (idempotent, UL chains only)
+    for i, line in enumerate(data):
+        if 'annotation' in line and re.search(r"nevts:\d+'\)", line):
+            data[i] = re.sub(r"nevts:\d+'\)", r"nevts:'+str(options.maxEvents))", line)
+
     with open(CMSSW_ConfigFile, 'w') as file:
         file.writelines(data)
 

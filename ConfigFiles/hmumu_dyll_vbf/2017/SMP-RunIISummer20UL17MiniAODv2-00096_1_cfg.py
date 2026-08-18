@@ -22,10 +22,11 @@ process.load('PhysicsTools.PatAlgos.slimming.metFilterPaths_cff')
 process.load('Configuration.StandardSequences.PATMC_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1769),
-    output = cms.untracked.int32(1769)
+    input = cms.untracked.int32(-1),
+    output = cms.untracked.int32(-1)
 )
 
 # Input source

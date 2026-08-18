@@ -41,7 +41,7 @@ The main script, [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM), depe
 - ***Step - 3:*** Fetch the CMSSW configuration file from the McM. Run the script [GetFullSimScriptsFromMCCM.py](GetFullSimScriptsFromMCCM.py) with the following command:
 
     ```bash
-    python3 GetFullSimScriptsFromMCCM.py   --model HHbbgg --year 2016preVFP --run_exec
+    python3 GetFullSimScriptsFromMCCM.py   --model HHbbgg --year 2016preVFP --run_exec --outDir /eos/user/r/rasharma/CustomNanoAOD/DY_VBF_Filter/
     ```
 
     Note the `model` and `year` arguments in the above command. It depends on your keys that you added in the [ChainDownloadLinkFromMccM_dict.py](utils/ChainDownloadLinkFromMccM_dict.py) and [gridpack_lists.py](utils/gridpack_lists.py) files.
