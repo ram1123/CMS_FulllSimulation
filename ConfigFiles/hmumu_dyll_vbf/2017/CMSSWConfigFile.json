@@ -1,0 +1,20 @@
+[
+    {
+        "step1_wmLHEGEN": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step1_wmLHEGEN.sh",
+            "CMSSWVersion": "CMSSW_10_6_28_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17wmLHEGEN-00320_1_cfg.py",
+            "filein": null,
+            "fileout": "file:SMP-RunIISummer20UL17wmLHEGEN-00320.root"
+        },
+        "step2_SIM": {
+            "scram_arch": "slc7_amd64_gcc700",
+            "script_name": "ConfigFiles/hmumu_dyll_vbf/2017/step2_SIM.sh",
+            "CMSSWVersion": "CMSSW_10_6_17_patch1",
+            "CMSSW_ConfigFile": "ConfigFiles/hmumu_dyll_vbf/2017/SMP-RunIISummer20UL17SIM-00109_1_cfg.py",
+            "filein": "file:SMP-RunIISummer20UL17wmLHEGEN-00320.root",
+            "fileout": "file:SMP-RunIISummer20UL17SIM-00109.root"
+        }
+    }
+]
