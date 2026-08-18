@@ -21,6 +21,8 @@ options.register ('gridpack',
             "gridpack with path")
 options.parseArguments()
 
+print("inside cmssw config: seed value: %s" % options.seedval)
+
 process = cms.Process('SIM',Run2_2017)
 
 # import of standard configurations
@@ -290,6 +292,7 @@ from Configuration.DataProcessing.Utils import addMonitoring
 #call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
 process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)
+process.RandomNumberGeneratorService.externalLHEProducer.initialSeed = options.seedval
 
 # End of customisation functions
 

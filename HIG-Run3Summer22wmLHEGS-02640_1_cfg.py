@@ -21,7 +21,7 @@ options.register ('gridpack',
             "gridpack with path")
 options.parseArguments()
 
-print(f"inside cmssw config: seed value: {options.seedval}")
+print("inside cmssw config: seed value: %s" % options.seedval)
 
 process = cms.Process('SIM',Run2_2017)
 
@@ -55,7 +55,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-Run3Summer22wmLHEGS-02640-fragment.py nevts:100'),
+    annotation = cms.untracked.string('Configuration/GenProduction/python/HIG-Run3Summer22wmLHEGS-02640-fragment.py nevts:'+str(options.maxEvents)),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -292,6 +292,7 @@ from Configuration.DataProcessing.Utils import addMonitoring
 #call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
 process.RandomNumberGeneratorService.generator.initialSeed = cms.untracked.uint32(options.seedval)
+process.RandomNumberGeneratorService.externalLHEProducer.initialSeed = options.seedval
 
 # End of customisation functions
 
